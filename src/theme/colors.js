@@ -1,49 +1,71 @@
-export const lightColors = {
-  primary: '#0F3D3E',
-  primaryHover: '#0b2e2f', // slightly darker for hover
-  primaryPressed: '#082324', // slightly darker for pressed
-  primaryDisabled: '#8aa6a7',
-  primarySoft: '#e1eeef', // Verified Badge Background & Info Banner
-  accent: '#1FA7A0', // Signal Teal
-  brandDark: '#0F3D3E', // Anchor (Primary Dark)
+export const palette = {
+  brandBlue: '#3B82F6',
+  brandIndigo: '#6366F1',
+  brandViolet: '#8B5CF6',
+  brandPurple: '#9333EA',
+  cyanAccent: '#22D3EE',
   success: '#22C55E',
   warning: '#F59E0B',
   danger: '#EF4444',
-  info: '#3E8EF7',
-  background: '#F8FAFC',
+  info: '#3B82F6',
+};
+
+export const lightColors = {
+  primary: palette.brandIndigo,
+  success: palette.success,
+  warning: palette.warning,
+  danger: palette.danger,
+  info: palette.info,
+  
+  background: '#F7F9FC',
+  backgroundSecondary: '#F1F5F9',
+  backgroundElevated: '#FFFFFF',
   surface: '#FFFFFF',
   surfaceSecondary: '#F8FAFC',
-  elevatedSurface: '#FFFFFF',
-  borderLight: '#E2E8F0',
-  border: '#CBD5E1',
-  borderFocused: '#0F3D3E',
-  divider: '#E5E7EB',
-  textPrimary: '#1F2937',
-  textSecondary: '#5A6672',
-  textMuted: '#5A6672',
-  textDisabled: '#CBD5E1',
-  textInverse: '#FFFFFF',
-  icon: '#5A6672',
-  iconActive: '#0F3D3E',
-  transparent: 'transparent',
-  overlay: 'rgba(15, 61, 62, 0.5)', // Anchor with opacity
+  surfaceElevated: '#FFFFFF',
+  input: '#FFFFFF',
+  border: '#E2E8F0',
+  borderSoft: 'rgba(15,23,42,0.07)',
+  divider: 'rgba(15,23,42,0.06)',
+  text: '#0F172A',
+  textSecondary: '#64748B',
+  textMuted: '#94A3B8',
+  icon: '#334155',
+  iconMuted: '#94A3B8',
+  overlay: 'rgba(15,23,42,0.45)',
+
+  // Legacy mappings to avoid breaking changes instantly, these should be phased out
+  textPrimary: '#0F172A',
+  borderLight: 'rgba(15,23,42,0.07)',
+  brandDark: '#080B12',
 };
 
 export const darkColors = {
-  ...lightColors,
-  primarySoft: 'rgba(15, 61, 62, 0.15)', // Translucent brandDark for soft backgrounds
-  primaryDisabled: '#082324', // Darker disabled state
-  background: '#F8FAFC', // Force light background for now to prevent blue tint in dark mode, or adapt to dark
-  surface: '#FFFFFF',
-  surfaceSecondary: '#F8FAFC',
-  elevatedSurface: '#FFFFFF',
-  borderLight: '#E2E8F0',
-  border: '#CBD5E1',
-  divider: '#E5E7EB',
-  textPrimary: '#1F2937',
-  textSecondary: '#5A6672',
-  textMuted: '#5A6672',
-  icon: '#5A6672',
-  iconActive: '#0F3D3E',
-  overlay: 'rgba(0, 0, 0, 0.7)',
+  primary: palette.brandIndigo,
+  success: palette.success,
+  warning: palette.warning,
+  danger: palette.danger,
+  info: palette.info,
+  
+  background: '#080B12',
+  backgroundSecondary: '#0C1220',
+  backgroundElevated: '#111A32',
+  surface: '#141A25',
+  surfaceSecondary: '#111827',
+  surfaceElevated: '#1A2130',
+  input: '#151C29',
+  border: '#263044',
+  borderSoft: 'rgba(255,255,255,0.07)',
+  divider: 'rgba(255,255,255,0.06)',
+  text: '#F8FAFC',
+  textSecondary: '#A7B0C0',
+  textMuted: '#6F7A8D',
+  icon: '#CBD5E1',
+  iconMuted: '#6F7A8D',
+  overlay: 'rgba(0,0,0,0.60)',
+
+  // Legacy mappings
+  textPrimary: '#F8FAFC',
+  borderLight: 'rgba(255,255,255,0.07)',
+  brandDark: '#080B12',
 };

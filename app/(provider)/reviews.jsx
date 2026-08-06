@@ -15,7 +15,7 @@ export default function ReviewsScreen() {
   const { theme } = useAppTheme();
 
   return (
-    <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
+    <View style={[styles.container, { backgroundColor: 'transparent' }]}>
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <View style={styles.header}>
           <Typography variant="h2" weight="bold" color="textPrimary">Reviews</Typography>

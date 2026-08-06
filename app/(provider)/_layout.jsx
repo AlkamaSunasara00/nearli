@@ -8,6 +8,7 @@ export default function ProviderLayout() {
 
   return (
     <Tabs
+      sceneContainerStyle={{ backgroundColor: 'transparent' }}
       screenOptions={{
         headerShown: false,
         tabBarShowLabel: true,

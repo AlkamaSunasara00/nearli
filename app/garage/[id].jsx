@@ -21,7 +21,7 @@ export default function GarageDetailScreen() {
   const isSaved = savedGarageIds.includes(garage.id);
 
   return (
-    <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
+    <View style={[styles.container, { backgroundColor: 'transparent' }]}>
       <ScrollView contentContainerStyle={styles.scrollContent}>
         
         <View style={[styles.imageContainer, { paddingTop: insets.top }]}>

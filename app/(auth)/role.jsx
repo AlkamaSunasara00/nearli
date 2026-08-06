@@ -100,15 +100,15 @@ export default function RoleSelectionScreen() {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: theme.colors.background }} edges={['top', 'bottom', 'left', 'right']}>
-      <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: 'transparent' }} edges={['top', 'bottom', 'left', 'right']}>
+      <View style={[styles.container, { backgroundColor: 'transparent' }]}>
         
         <Animated.View entering={FadeInUp.duration(600).delay(100)} style={styles.header}>
           <Typography variant="display" weight="bold" color="textPrimary" style={styles.title}>
             Choose Your Profile
           </Typography>
           <Typography variant="body" color="textSecondary" style={styles.subtitle}>
-            Select how you'd like to use Nearli today. You can always change this later in settings.
+            Select how you'd like to use NEARIST today. You can always change this later in settings.
           </Typography>
         </Animated.View>
 

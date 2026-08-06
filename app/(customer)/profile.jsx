@@ -70,7 +70,7 @@ export default function ProfileScreen() {
   };
 
   return (
-    <View style={[styles.container, { backgroundColor: theme.colors.background, paddingTop: insets.top }]}>
+    <View style={[styles.container, { backgroundColor: 'transparent', paddingTop: insets.top }]}>
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <View style={styles.header}>
           <Avatar name={user?.name || "Demo User"} size={80} style={styles.avatar} />

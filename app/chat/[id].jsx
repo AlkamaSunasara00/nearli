@@ -30,7 +30,7 @@ export default function ChatScreen() {
 
   return (
     <KeyboardAvoidingView
-      style={[styles.container, { backgroundColor: theme.colors.background, paddingTop: insets.top }]}
+      style={[styles.container, { backgroundColor: 'transparent', paddingTop: insets.top }]}
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
       <View style={[styles.header, { borderBottomColor: theme.colors.border }]}>

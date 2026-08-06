@@ -1,77 +1,87 @@
-# COMPLETE UI/UX RESCUE, REDESIGN & FUNCTIONALITY IMPLEMENTATION
+# NEARIST — STEP 3: PREMIUM ONBOARDING EXPERIENCE
 
-You are working inside an EXISTING React Native + Expo application.
+The following Nearist work has already been completed:
 
-A previous implementation attempt has already created many screens and components, but the current result is NOT acceptable.
+1. Global Nearist Design System
+2. Nearist Splash / Loading Screen
 
-There are currently problems such as:
+Now implement ONLY the CUSTOMER ONBOARDING EXPERIENCE.
 
-* weak/generic UI
-* inconsistent design
-* broken layouts
-* incomplete screens
-* missing functionality
-* buttons that do nothing
-* missing navigation
-* inconsistent spacing
-* poor dark mode
-* unfinished states
-* missing Customer functionality
-* missing Provider functionality
-* components that do not feel reusable
-* screens that look like generated templates instead of a real premium mobile application
+Do NOT redesign or modify:
 
-Your task is NOT to blindly rebuild everything.
+* Global design system unless fixing a genuine issue
+* Splash Screen
+* Authentication
+* Home
+* Search
+* Explore
+* Messages
+* Saved
+* Profile
+* Provider/Seller screens
+* Admin screens
 
-Your task is to:
-
-1. Audit the complete existing project.
-2. Find every existing screen and component.
-3. Compare the implementation against ALL requirements below.
-4. Identify missing screens and functionality.
-5. Repair broken layouts.
-6. Redesign visually weak screens.
-7. Complete missing functionality using frontend/local/mock state.
-8. Standardize the entire application with one premium design system.
-9. Test every route, tab, button and interaction.
-10. Leave the project in a polished, production-quality frontend state.
-
-The final application must feel like a professionally designed modern startup application, NOT an AI-generated template.
+The purpose of this task is to create a polished onboarding experience that feels like a direct continuation of the Nearist Splash Screen.
 
 ---
 
-# 1. CRITICAL RULE — DO NOT DESTROY WORKING FEATURES
+# 1. USE EXISTING DESIGN SYSTEM
 
-First inspect the existing project.
+DO NOT create new:
 
-DO NOT immediately delete everything.
+* colors
+* gradients
+* fonts
+* spacing systems
+* radius systems
+* shadow systems
+* icon systems
+* theme providers
 
-For every existing screen/component:
+Use the existing Nearist global design system.
 
-* determine whether it works
-* determine whether it matches the product requirements
-* determine whether it is reusable
-* determine whether its design quality is acceptable
+The established identity is:
 
-KEEP good logic.
+Brand:
+NEARIST
 
-REFACTOR weak code.
+Tagline:
+"Whatever You Need, Nearist."
 
-REDESIGN weak UI.
+Font:
+Inter
 
-REPLACE broken components.
+Primary Gradient:
 
-CREATE missing components.
+#3B82F6
+→
+#6366F1
+→
+#8B5CF6
 
-DELETE only obsolete, duplicated or unused files after confirming they are no longer required.
+Dark Background:
 
-Do not break working Expo configuration.
+#111A32
+→
+#0C1220
+→
+#080B12
+
+Design language:
+
+Premium Modern Minimalism
++
+Location-First Discovery
++
+Subtle Soft Surfaces
++
+Controlled Gradient Accents
 
 ---
 
-# 2. JAVASCRIPT + JSX ONLY
+# 2. TECHNOLOGY
 
-This project MUST remain:
+Keep the project:
 
 React Native
 Expo
@@ -79,2817 +89,1074 @@ Expo Router
 JavaScript
 JSX
 
-DO NOT create application code using:
-
-.ts
-
-.tsx
-
 Use:
 
 .js
-
 .jsx
 
-If TypeScript application files still exist, replace them properly with JavaScript/JSX equivalents and remove obsolete duplicates.
+DO NOT create:
 
-Do not blindly remove configuration required by Expo dependencies.
-
----
-
-# 3. NO BACKEND IN THIS PHASE
-
-This phase is frontend/UI only.
-
-DO NOT build:
-
-* real backend
-* database
-* real authentication server
-* real OTP
-* real WebSocket server
-* real payments
-* real push notification backend
-* real booking
-* AI features
-
-However, ALL UI functionality must behave realistically using:
-
-* local state
-* mock data
-* Context where appropriate
-* AsyncStorage where persistence improves the demo
-* reusable service abstractions
-
-There should NOT be dead buttons just because the backend does not exist.
+.ts
+.tsx
 
 ---
 
-# 4. PRIMARY OBJECTIVE — REDESIGN THE ENTIRE EXPERIENCE
+# 3. OBJECTIVE
 
-The current UI is not good enough.
+Create a premium 3-step onboarding experience.
 
-Redesign it into a:
+The user should understand three things:
 
-MODERN
-PREMIUM
-CLEAN
-MINIMAL
-TRUSTWORTHY
-HIGH-END
-POLISHED
-FAST
-MOBILE-FIRST
+STEP 1:
+Find professionals nearby.
 
-application.
+STEP 2:
+Compare and choose trusted professionals.
 
-The design should feel comparable in QUALITY to polished consumer apps such as:
+STEP 3:
+Connect quickly when help is needed.
 
-Uber
-Airbnb
-Google Maps
-Urban Company
-Blinkit
+The onboarding should NOT explain every feature of the application.
 
-Do NOT copy them.
+Keep it simple.
 
-Create an original visual identity.
+The purpose is:
+
+UNDERSTAND
+→
+TRUST
+→
+START
 
 ---
 
-# 5. DO NOT CREATE A GENERIC AI UI
+# 4. VISUAL QUALITY
 
-Avoid the common generated-app look.
+The onboarding should feel like a polished consumer technology application.
 
-DO NOT:
+It must NOT look like:
 
-* put every section inside a giant card
-* use excessive gradients
-* use purple gradients everywhere
-* make every element extremely rounded
-* use random shadows
-* use giant headings
-* create huge empty spaces
-* use excessive emojis
-* mix icon libraries
-* create desktop dashboard layouts inside mobile screens
-* use 5 different accent colors
-* make every button a pill
-* make every section visually identical
-* use glassmorphism everywhere
-* use decorative animations that slow navigation
-* create unnecessary nested cards
-* create oversized statistics cards
-* make dark mode simply black backgrounds
+* generic onboarding template
+* giant illustration + random text
+* gaming UI
+* crypto UI
+* excessive glassmorphism
+* excessive cards
+* excessive gradients
+* basic icon inside a circle
+* three identical screens with only different text
 
-The UI must feel intentionally designed.
+Each onboarding screen should have its own visual story while remaining part of the same design system.
 
 ---
 
-# 6. NEW PREMIUM COLOR SYSTEM
+# 5. GLOBAL ONBOARDING LAYOUT
 
-Create ONE centralized theme system.
+Use a consistent structural system.
 
-Recommended primary brand direction:
+TOP:
 
-PRIMARY
-#2563EB
+Skip action
 
-PRIMARY PRESSED
-#1D4ED8
+MIDDLE:
 
-PRIMARY SOFT
-#EFF6FF
+Premium visual / illustration
 
-ACCENT
-#14B8A6
+LOWER:
 
-SUCCESS
-#16A34A
-
-WARNING
-#F59E0B
-
-DANGER
-#DC2626
-
-LIGHT BACKGROUND
-#F7F9FC
-
-LIGHT SURFACE
-#FFFFFF
-
-LIGHT SURFACE SECONDARY
-#F1F5F9
-
-LIGHT BORDER
-#E2E8F0
-
-LIGHT TEXT PRIMARY
-#0F172A
-
-LIGHT TEXT SECONDARY
-#64748B
-
-LIGHT TEXT MUTED
-#94A3B8
-
-DARK BACKGROUND
-#090D14
-
-DARK SURFACE
-#111827
-
-DARK SURFACE SECONDARY
-#182234
-
-DARK ELEVATED
-#1E293B
-
-DARK BORDER
-#283548
-
-DARK TEXT PRIMARY
-#F8FAFC
-
-DARK TEXT SECONDARY
-#CBD5E1
-
-DARK TEXT MUTED
-#8291A7
-
-DARK PRIMARY
-#3B82F6
-
-DARK PRIMARY SOFT
-#172554
-
-DARK ACCENT
-#2DD4BF
-
-DARK SUCCESS
-#22C55E
-
-DARK WARNING
-#FBBF24
-
-DARK DANGER
-#EF4444
-
-You may improve these slightly for accessibility/contrast.
-
-BUT:
-
-all colors MUST live in centralized theme files.
-
-No random hexadecimal colors throughout screens.
-
----
-
-# 7. CENTRALIZED DESIGN TOKENS
-
-Create/refactor:
-
-src/theme/colors.js
-
-src/theme/spacing.js
-
-src/theme/typography.js
-
-src/theme/radius.js
-
-src/theme/shadows.js
-
-src/theme/index.js
-
-Create semantic values such as:
-
-colors.background
-
-colors.surface
-
-colors.surfaceSecondary
-
-colors.primary
-
-colors.primarySoft
-
-colors.text
-
-colors.textSecondary
-
-colors.textMuted
-
-colors.border
-
-colors.success
-
-colors.warning
-
-colors.danger
-
-colors.overlay
-
-Do not make screens know raw colors.
-
----
-
-# 8. LIGHT / DARK / SYSTEM THEME
-
-Implement theme modes properly:
-
-System
-Light
-Dark
-
-Default:
-
-System
-
-Persist manual preference.
-
-Create:
-
-ThemeProvider
-
-useAppTheme()
-
-EVERY screen and component must support both themes.
-
-Audit:
-
-* bottom tabs
-* headers
-* cards
-* search
-* inputs
-* filters
-* chips
-* buttons
-* bottom sheets
-* modals
-* dialogs
-* chat
-* provider dashboard
-* reviews
-* skeletons
-* empty states
-* status bars
-* separators
-
-There must be NO unreadable text in dark mode.
-
-There must be NO white cards accidentally appearing on dark screens.
-
----
-
-# 9. TYPOGRAPHY
-
-Use a professional modern type system.
-
-Prefer Inter if already available/appropriate.
-
-Create tokens for:
-
-display
-heading1
-heading2
-heading3
-title
-body
-bodyMedium
-label
-caption
-button
-
-Avoid giant headings.
-
-Use strong hierarchy instead of excessive font size.
-
----
-
-# 10. SPACING
-
-Use a consistent spacing scale:
-
-4
-8
-12
-16
-20
-24
-32
-40
-
-Avoid random values such as:
-
-13
-17
-29
-37
-
-unless genuinely required.
-
-Use approximately:
-
-16–20 horizontal screen padding.
-
----
-
-# 11. RADIUS
-
-Create:
-
-sm = 8
-
-md = 12
-
-lg = 16
-
-xl = 20
-
-pill = 999
-
-Use rounded design intentionally.
-
-Cards should generally use 12–18 radius.
-
-Do NOT use 30px radius on everything.
-
----
-
-# 12. SHADOWS / ELEVATION
-
-Use shadows sparingly.
-
-Most hierarchy should come from:
-
-background differences
-borders
-spacing
-typography
-
-Use subtle elevation for:
-
-bottom sheets
-floating cards
-sticky action bars
-selected map card
-modal surfaces
-
-Do not make every card float.
-
----
-
-# 13. ICON SYSTEM
-
-Use ONE icon family.
-
-Prefer:
-
-Lucide React Native
-
-Keep consistent:
-
-16px
-18px
-20px
-24px
-
-depending on context.
-
-Use consistent stroke widths.
-
-Do not use emoji as production icons.
-
----
-
-# 14. BUILD / REFACTOR REUSABLE COMPONENTS
-
-Create a strong reusable UI system.
-
-Required components include:
-
-Button
-
-IconButton
-
-Input
-
-PhoneInput
-
-SearchBar
-
-Avatar
-
-Badge
-
-StatusBadge
-
-VerificationBadge
-
-Rating
-
-RatingSummary
-
-ProviderCard
-
-ServiceCard
-
-ServiceChip
-
-FilterChip
-
-VehicleSelector
-
-BrandChip
-
-SectionHeader
-
-ScreenHeader
-
-EmptyState
-
-ErrorState
-
-Skeleton
-
-GarageCardSkeleton
-
-ConversationSkeleton
-
-ReviewSkeleton
-
-BottomSheet
-
-Modal
-
-ConfirmDialog
-
-Checkbox
-
-Radio
-
-Toggle
-
-SegmentedControl
-
-StatItem
-
-ReviewCard
-
-ConversationRow
-
-ChatBubble
-
-ChatComposer
-
-QuickReplyChip
-
-ProfileMenuItem
-
-SettingRow
-
-AvailabilitySelector
-
-LocationCard
-
-MapPreview
-
-ImageGallery
-
-PhotoGrid
-
-ProgressIndicator
-
-Toast/Snackbar
-
-Do NOT duplicate these patterns separately on each screen.
-
----
-
-# 15. BUTTONS MUST BE STANDARDIZED
-
-Create ONE button system.
-
-Variants:
-
-Primary
-Secondary
-Outline
-Ghost
-Danger
-
-Sizes:
-
-Small
-Medium
-Large
-
-States:
-
-Normal
-Pressed
-Disabled
-Loading
-
-Support:
-
-iconLeft
-iconRight
-fullWidth
-
-Buttons must have proper touch targets.
-
----
-
-# 16. NAVIGATION MUST BE FULLY FUNCTIONAL
-
-Use Expo Router correctly.
-
-Route groups should logically separate:
-
-(auth)
-
-(customer)
-
-(provider)
-
-shared/detail screens
-
-Customer tabs:
-
-Home
-Explore
-Messages
-Saved
-Profile
-
-Provider tabs:
-
-Dashboard
-Messages
-Garage
-Reviews
-Profile
-
-Test EVERY tab.
-
-No tab should navigate to:
-
-blank screen
-wrong screen
-404 route
-broken route
-
-Back navigation must work.
-
----
-
-# 17. BOTTOM TAB BAR REDESIGN
-
-Redesign the bottom navigation to look modern and premium.
-
-Requirements:
-
-* compact
-* safe-area aware
-* theme-aware
-* icon + small label
-* strong active state
-* subtle inactive state
-* unread Messages badge
-* subtle top border/elevation
-* no giant center FAB
-* keyboard-aware
-
-The active state may use:
-
-primary icon/text
-
-with a subtle soft-primary background indicator if it improves the design.
-
----
-
-# 18. AUTHENTICATION SCREENS
-
-Complete and redesign ALL:
-
-Splash
-
-Onboarding
-
-Phone Login
-
-OTP Verification
-
-Role Selection
-
-Customer Setup
-
-Provider Registration
-
-All must be visually consistent.
-
----
-
-# 19. SPLASH
-
-Create a minimal premium splash.
-
-Logo/brand placeholder
-
-App name
-
-Short line:
-
-"Trusted services around you."
-
-Subtle loading indicator.
-
-Do NOT make a huge animation.
-
----
-
-# 20. ONBOARDING
-
-Create three beautiful slides.
-
-1.
-
-Find trusted garages near you.
-
-2.
-
-Compare services, ratings and availability.
-
-3.
-
-Message garages instantly.
-
-Each should include:
-
-illustration area
-short heading
-short description
-page indicator
-
-Actions:
-
-Skip
-Next
-Get Started
-
----
-
-# 21. PHONE LOGIN
-
-Create premium authentication layout.
-
-Include:
-
-brand
-heading
-description
-+91 country code
-phone input
-Continue
-
-Terms/Privacy acknowledgement.
-
-Implement local validation.
-
-Continue should navigate to OTP when valid.
-
----
-
-# 22. OTP
-
-Create:
-
-6-digit input
-
-auto focus
-
-resend countdown
-
-invalid state
-
-expired state
-
-Verify
-
-Change Number
-
-For demo:
-
-use a clearly documented mock OTP such as:
-
-123456
-
-Successful entry should continue through the UI flow.
-
----
-
-# 23. ROLE SELECTION
-
-Cards:
-
-Customer
-
-Service Provider
-
-Do NOT call Provider:
-
-Seller
-
-Each card should have:
-
-icon
-title
-description
-selected state
-
-Continue button.
-
-Role selection must actually update local app state and route to the correct experience.
-
----
-
-# 24. PROVIDER REGISTRATION
-
-Build/repair a polished multi-step provider onboarding.
-
-Steps:
-
-Business
-Location
-Services
-Vehicles
-Hours
-Photos
-Review
-
-Show progress.
-
-Each step must work.
-
-Allow:
-
-Back
-Next
-Save Draft
-
-Validate required fields locally.
-
-Final:
-
-Submit for Verification
-
-Then show:
-
-Pending Verification state.
-
----
-
-# 25. CUSTOMER HOME — FULL REDESIGN
-
-This screen must immediately look premium.
-
-Top area:
-
-Greeting
-
-Current location
-
-Avatar
-
-Example:
-
-Good morning
-
-Chhapi, Gujarat
-
-Below:
-
-large but elegant search field
-
-"Search garage, service or problem"
-
-Then:
-
-Bike / Car selector
-
-Then:
-
-Quick Services
-
-Use clean icon tiles/chips for:
-
-Puncture
-
-Battery
-
-Oil Change
-
-Engine
-
-Brakes
-
-Electrical
-
-AC
-
-General Service
-
-Then:
-
-Available Near You
-
-Then:
-
-Top Rated
-
-Then:
-
-Open Now
-
-Then:
-
-Recently Viewed
-
-Do NOT display all sections using exactly the same layout.
-
-Use visual variation intentionally.
-
----
-
-# 26. PROVIDER CARD — REDESIGN CAREFULLY
-
-This component appears everywhere.
-
-It must be excellent.
-
-Include:
-
-realistic image
-
-Garage name
-
-Verified badge
-
-Rating
-
-Review count
-
-Distance
-
-Open/Closed
-
-Availability
-
-Bike/Car
-
-Relevant services
-
-Optional quick actions:
-
-Message
-Call
-
-Availability:
-
-Available
-
-Busy
-
-Unavailable
-
-Do not paint the entire card green/orange/red.
-
-Use compact badges.
-
-Create:
-
-horizontal card variant
-
-vertical card variant
-
-map preview variant
-
-saved variant
-
-Reuse the same design language.
-
----
-
-# 27. LOCATION PICKER
-
-Complete:
-
-Search location
-
-Use Current Location
-
-Recent locations
-
-Map placeholder
-
-Pin selector
-
-Use This Location
-
-Location denied state.
-
-Current Location button must update mock location.
-
----
-
-# 28. EXPLORE
-
-Redesign and complete.
-
-Top:
-
-Explore
-
-Search
-
-Recent searches
-
-Popular services
-
-Nearby areas
-
-List / Map toggle
-
-Search interactions must work.
-
----
-
-# 29. SEARCH RESULTS
-
-Implement:
-
-search query
-
-result count
-
-Sort
-
-Filter
-
-Map
-
-Sorting must work locally:
-
-Recommended
-
-Nearest
-
-Rating
-
-Most Reviewed
-
-Use realistic mock garage data.
-
----
-
-# 30. FILTERS — COMPLETE FUNCTIONALITY
-
-Filters must actually affect mock results.
-
-Implement:
-
-Vehicle
-
-Bike
-Car
-Both
-
-Distance
-
-2km
-5km
-10km
-25km
-
-Available Now
-
-Open Now
-
-Rating
-
-4.5+
-
-4.0+
-
-3.5+
-
-Services
-
-Brands
-
-Sticky footer:
-
-Reset All
-
-Apply Filters
-
-Show active filter count.
-
-Persist filter state while moving between Explore and Results.
-
----
-
-# 31. MAP SCREEN
-
-Build the complete map-screen UI.
-
-If real map integration is not configured, DO NOT break the application.
-
-Create a polished map placeholder architecture.
-
-Include:
-
-search
-
-markers
-
-selected marker state
-
-recenter
-
-filters
-
-Search This Area
-
-List View
-
-When a marker is selected:
-
-show bottom floating ProviderCard.
-
----
-
-# 32. GARAGE DETAIL — MAJOR REDESIGN
-
-This is one of the MOST IMPORTANT screens.
-
-Spend extra effort here.
-
-Top:
-
-large photo cover/gallery
-
-floating Back
-
-Favorite
-
-Share
-
-Then:
-
-Garage Name
-
-Verified badge
-
-Rating
-
-review count
-
-distance
-
-Open Now
-
-Available
-
-Then primary actions:
-
-MESSAGE
-
-CALL
-
-DIRECTIONS
-
-MESSAGE should be visually strongest.
-
-Then:
-
-About
-
-Services
-
-Vehicles
-
-Brands
-
-Hours
-
-Location
-
-Map Preview
-
-Photos
-
-Reviews
-
-Avoid huge cards for every section.
-
-Use:
-
-clean section separation
-
-typography
-
-spacing
-
-small surfaces
-
-chips
-
-dividers
-
-Create sticky bottom actions when useful.
-
----
-
-# 33. FAVORITE FUNCTIONALITY
-
-Favorite must actually work locally.
-
-Tapping heart:
-
-adds/removes garage.
-
-Saved tab updates immediately.
-
-Persist favorites using AsyncStorage if available/appropriate.
-
-Favorite state must remain consistent between:
-
-Home
-
-Explore
-
-Garage Detail
-
-Saved
-
----
-
-# 34. SERVICES DETAIL
-
-Create grouped services.
-
-Examples:
-
-General
-
-Engine
-
-Tyres
-
-Electrical
-
-Battery
-
-Brakes
-
-AC
-
-Each service:
-
-icon
-
-name
-
-description where appropriate
-
-CTA:
-
-Message About Service
-
-This should open/create the mock conversation with service context.
-
----
-
-# 35. PHOTO GALLERY
-
-Implement:
-
-grid
-
-fullscreen image viewer
-
-swipe
-
-close
-
-image counter
-
-loading/error states
-
----
-
-# 36. MESSAGES TAB
-
-Complete:
-
-search conversations
-
-conversation rows
-
-garage avatar
-
-garage name
-
-verification
-
-last message
-
-time
-
-unread count
-
-availability
-
-Unread conversations should be clearly distinguishable.
-
-Search must filter conversations locally.
-
----
-
-# 37. CUSTOMER CHAT — COMPLETE
-
-Implement a polished mock chat experience.
-
-Header:
-
-Back
-
-Garage avatar
-
-Garage name
-
-Verified
-
-Availability
-
-Call
-
-Optional context:
-
-Regarding: Engine Repair
-
-Messages:
-
-incoming
-
-outgoing
-
-timestamps
-
-sent
-
-delivered
-
-read
-
-failed state if simulated
-
-Composer:
-
-attachment
-
-text input
-
-send
-
-Quick replies:
-
-Are you available?
-
-Can I come now?
-
-Do you repair this vehicle?
-
-Approximate cost?
-
-Sending a message must actually add it to local conversation state.
-
-Update:
-
-conversation last message
-
-timestamp
-
-ordering
-
-Do NOT leave Send non-functional.
-
-Keyboard must not cover composer.
-
----
-
-# 38. SAVED TAB
-
-Complete:
-
-Saved Garages
-
-sort
-
-Recently Saved
-
-Nearest
-
-Provider cards
-
-Remove Favorite
-
-Empty state
-
-Explore Garages CTA.
-
----
-
-# 39. CUSTOMER PROFILE
-
-Redesign into clean grouped sections.
-
-Header:
-
-avatar
-
-name
-
-phone
-
-ACCOUNT
-
-Edit Profile
-
-My Reviews
-
-PREFERENCES
-
-Location & Permissions
-
-Notifications
-
-Appearance
-
-SUPPORT
-
-Help
-
-Terms
-
-Privacy
-
-ACCOUNT ACTIONS
-
-Logout
-
-Delete Account
-
-All rows should navigate/open something.
-
-No dead menu rows.
-
----
-
-# 40. APPEARANCE SCREEN
-
-Implement:
-
-System Default
-
-Light
-
-Dark
-
-Selecting an option should immediately update the entire application.
-
-Persist selection.
-
----
-
-# 41. EDIT PROFILE
-
-Implement local editing.
-
-Avatar
-
-Name
-
-Phone
-
-Save
-
-Changing phone can show:
-
-"Phone verification will be required when backend authentication is connected."
-
----
-
-# 42. MY REVIEWS
-
-Complete:
-
-garage
-
-rating
-
-text
-
-date
-
-Edit
-
-Delete
-
-Editing must update local state.
-
-Delete should show confirmation.
-
----
-
-# 43. WRITE REVIEW
-
-Implement:
-
-Garage summary
-
-interactive 5 stars
-
-text area
-
-character guidance if useful
-
-Submit
-
-Validation
-
-After submission:
-
-update mock review data
-
-update rating display if practical
-
-show success feedback.
-
----
-
-# 44. CUSTOMER NOTIFICATION SETTINGS
-
-Implement toggles:
-
-Messages
-
-Garage Replies
-
-Review Updates
-
-Platform Announcements
-
-Toggles must actually change local settings.
-
----
-
-# 45. PROVIDER DASHBOARD — MAJOR REDESIGN
-
-This should NOT look like an admin dashboard.
-
-Garage owners need simplicity.
-
-Top:
-
-Good Morning
-
-Garage Name
-
-Verification
-
-Then:
-
-LARGE availability control
-
-AVAILABLE
-
-BUSY
-
-UNAVAILABLE
-
-Then compact activity summary:
-
-New Messages
-
-Calls
-
-Directions
-
-Profile Views
-
-New Reviews
-
-Do NOT create five giant statistic cards.
-
-Use a compact modern grid/list.
-
-Then:
-
-Recent Messages
-
-Then:
-
-Profile Completion
-
-Example:
-
-80% Complete
-
-Add Opening Hours
-
-Upload More Photos
-
-Verification banner where required.
-
----
-
-# 46. PROVIDER AVAILABILITY MUST WORK
-
-Implement local availability state.
-
-Available
-
-Busy
-
-Unavailable
-
-Changing status must update it across:
-
-Provider Dashboard
-
-Garage Profile
-
-Customer Garage Detail
-
-Provider cards
-
-where mock shared state allows.
-
-This is important.
-
----
-
-# 47. PROVIDER MESSAGES
-
-Implement:
-
-All
-
-Unread
-
-Search
-
-Conversation list
-
-Customer name
-
-Last message
-
-Service context
-
-Unread count
-
-Provider Chat.
-
----
-
-# 48. PROVIDER CHAT
-
-Reuse the SAME chat system.
-
-Do not create a second incompatible chat UI.
-
-Provider quick replies:
-
-Yes, available now
-
-Please come after...
-
-We repair this
-
-Please call me
-
-Messages sent from Provider side should update shared mock conversation state.
-
----
-
-# 49. PROVIDER GARAGE TAB
-
-Redesign.
-
-Top:
-
-Cover
-
-Garage avatar/logo
-
-Garage name
-
-Verified
-
-Rating
-
-Availability
-
-Profile completeness
-
-Then:
-
-Business Information
-
-Photos
-
-Services
-
-Vehicle Types & Brands
-
-Opening Hours
-
-Location
-
-Contact Information
-
-CTA:
-
-Preview Public Profile
-
-Every section must open the correct editor.
-
----
-
-# 50. BUSINESS INFORMATION
-
-Fields:
-
-Garage Name
-
-Owner Name
+Headline
 
 Description
 
-Phone
+Progress
 
-WhatsApp
+BOTTOM:
 
-Save locally.
+Primary CTA
 
-Show verification warning when sensitive fields change.
+Approximate structure:
 
----
+[ Skip ]
 
-# 51. MANAGE PHOTOS
+[ Premium Visual Area ]
 
-Implement local/demo functionality:
+Find trusted help nearby.
 
-Cover photo
+Discover reliable local professionals
+based on your location, ratings and
+availability.
 
-Gallery
+[ Progress ]
 
-Add Photo
+[ Continue ]
 
-Delete
+Do not mechanically copy these positions.
 
-Set Cover
-
-Reorder where practical
-
-Upload progress simulation if useful.
-
-Do not leave photo controls dead.
+Create balanced spacing based on device height.
 
 ---
 
-# 52. MANAGE SERVICES
+# 6. SAFE AREA
 
-Search services.
+Respect SafeArea correctly.
 
-Grouped list.
-
-Checkbox selection.
-
-Selected count.
-
-Save.
-
-Provider's public profile should reflect selected services.
-
----
-
-# 53. VEHICLE TYPES & BRANDS
-
-Implement:
-
-Bike
-
-Car
-
-Both
-
-Brand search
-
-Brand multi-select
-
-Selected brands
-
-Save.
-
-Public garage profile should update.
-
----
-
-# 54. OPENING HOURS
-
-Implement all days.
-
-Monday
-
-Tuesday
-
-Wednesday
-
-Thursday
-
-Friday
-
-Saturday
-
-Sunday
-
-Each:
-
-Open/Closed
-
-Opening time
-
-Closing time
-
-Implement:
-
-Copy Monday to Weekdays
-
-Save.
-
-Use a polished time picker if available and compatible.
-
----
-
-# 55. GARAGE LOCATION
-
-Implement:
-
-Address
-
-Use Current Location mock
-
-Map preview
-
-Move Pin mock
-
-Save
-
-Show:
-
-Changing location may require re-verification.
-
----
-
-# 56. CONTACT INFORMATION
-
-Implement:
-
-Public phone
-
-WhatsApp
-
-Allow Calls toggle
-
-Allow WhatsApp toggle
-
-Save.
-
----
-
-# 57. PROVIDER REVIEWS
-
-Implement:
-
-Average rating
-
-Review count
-
-Rating distribution
-
-Review list
-
-Report Review
-
-Do NOT allow provider to:
-
-edit
-
-delete
-
-customer reviews.
-
----
-
-# 58. REPORT REVIEW
-
-Bottom sheet:
-
-Spam
-
-Abusive
-
-Unrelated
-
-Conflict
-
-Other
-
-Submit Report
-
-Show success state locally.
-
----
-
-# 59. PROVIDER PROFILE
-
-Complete:
-
-Personal Profile
-
-Verification Status
-
-Notifications
-
-Appearance
-
-Help
-
-Terms
-
-Privacy
-
-Logout
-
-Delete Account
-
-All navigation must work.
-
----
-
-# 60. VERIFICATION STATES
-
-Implement:
-
-PENDING
-
-APPROVED
-
-REJECTED
-
-Pending:
-
-Verification in Progress
-
-Approved:
-
-Verified Garage
-
-Rejected:
-
-reason
-
-required changes
-
-Fix & Resubmit
-
-Make these states visually excellent.
-
----
-
-# 61. PROVIDER NOTIFICATIONS
-
-Implement toggles:
-
-New Messages
-
-Unread Message Reminders
-
-Reviews
-
-Verification Updates
-
-Platform Notices
-
----
-
-# 62. LOADING STATES
-
-Audit every important screen.
-
-Create skeletons for:
-
-Home
-
-Provider cards
-
-Search results
-
-Garage Detail
-
-Messages
-
-Reviews
-
-Provider Dashboard
-
-Use action spinner for:
-
-Save
-
-Submit
-
-Send
-
-Verify
-
-Do not show a full-screen spinner for every load.
-
----
-
-# 63. EMPTY STATES
-
-Implement polished empty states for:
-
-No garages nearby
-
-No search results
-
-No messages
-
-No favorites
-
-No reviews
-
-No photos
-
-No selected services
-
-No recent activity
-
-Each should have:
-
-icon
-
-title
-
-short explanation
-
-useful CTA
-
----
-
-# 64. ERROR STATES
-
-Implement:
-
-No Internet
-
-Unable to Load Garages
-
-Location Unavailable
-
-Message Failed
-
-Image Failed
-
-Generic Error
-
-Retry button.
-
----
-
-# 65. MOCK DATA MUST BE REALISTIC
-
-Centralize mock data.
-
-DO NOT hardcode giant arrays inside screens.
-
-Use files such as:
-
-src/data/mockProviders.js
-
-src/data/mockUsers.js
-
-src/data/mockServices.js
-
-src/data/mockReviews.js
-
-src/data/mockMessages.js
-
-src/data/mockBrands.js
-
-Use realistic local garage examples.
-
-Each garage should vary:
-
-rating
-
-reviews
-
-distance
-
-availability
-
-opening status
-
-services
-
-bike/car support
-
-brands
-
-photos
-
-description
-
-hours
-
-location
-
-Do not make every garage identical.
-
----
-
-# 66. CREATE SHARED FRONTEND STATE
-
-Create a clean local state architecture.
-
-It must support:
-
-current role
-
-current user
-
-theme
-
-favorites
-
-filters
-
-provider availability
-
-provider profile
-
-services
-
-opening hours
-
-reviews
-
-messages
-
-unread counts
-
-notification preferences
-
-Do not create unnecessary complexity.
-
-Context + hooks is acceptable.
-
-Use AsyncStorage only where persistence improves the demo.
-
----
-
-# 67. CRITICAL FUNCTIONALITY AUDIT
-
-After implementation, manually inspect EVERY clickable element.
-
-Every:
-
-button
-
-icon button
-
-tab
-
-menu item
-
-filter
-
-chip
-
-favorite
-
-message
-
-review
-
-setting
-
-theme selector
-
-availability selector
-
-profile editor
-
-service selector
-
-location action
-
-must either:
-
-perform its intended frontend action
-
-OR
-
-navigate to the intended screen
-
-OR
-
-show a clear intentional placeholder message for functionality that absolutely requires future backend/native configuration.
-
-There must be NO mysterious dead buttons.
-
----
-
-# 68. SCREEN RESPONSIVENESS
-
-Test layouts conceptually for:
-
-360px width
-
-390px width
-
-412px width
-
-small Android phones
-
-larger Android phones
-
-No:
-
-horizontal overflow
-
-cut text
-
-buttons outside screen
-
-cards wider than screen
-
-bad keyboard overlap
-
-hidden bottom content
-
----
-
-# 69. SAFE AREA
-
-Use SafeAreaView / safe-area insets properly.
-
-Nothing should collide with:
+Top Skip button must never collide with:
 
 status bar
-
+notch
 camera cutout
 
-bottom gesture area
+Bottom CTA must never collide with:
 
-bottom tabs
-
-keyboard
-
----
-
-# 70. KEYBOARD
-
-Audit:
-
-Login
-
-OTP
-
-Search
-
-Chat
-
-Profile editing
-
-Provider registration
-
-Business editor
-
-Review writing
-
-The keyboard must not destroy layouts.
-
-Chat composer must remain accessible.
-
-Forms must scroll appropriately.
+gesture navigation
+home indicator
 
 ---
 
-# 71. PERFORMANCE
+# 7. BACKGROUND
 
-Use:
+Use the existing Nearist branded dark background.
 
-FlatList
+Use the existing dark gradient system.
 
-for lists.
+Do NOT introduce a different gradient.
 
-Avoid mapping hundreds of items inside ScrollView.
+Allow extremely subtle ambient:
 
-Optimize rendering.
+blue
+indigo
+violet
 
-Avoid huge nested ScrollViews.
+glow around each screen's main visual.
 
-Avoid unnecessary re-renders.
-
-Use optimized images/placeholders.
-
----
-
-# 72. ACCESSIBILITY
-
-Minimum useful touch target.
-
-Good contrast.
-
-Accessible labels.
-
-Selected states.
-
-Readable typography.
-
-Do not communicate status only with color.
-
-Use:
-
-green indicator + "Available"
-
-not only green.
+The glow should support the visual, not dominate it.
 
 ---
 
-# 73. ANIMATION
+# 8. ONBOARDING SCREEN 1 — DISCOVER
 
-Use subtle animations only.
+PURPOSE:
 
-Good:
+Communicate:
 
-button press
+"Nearist helps me find professionals around me."
 
-favorite
+Headline:
 
-bottom sheet
+"Find trusted help nearby."
 
-tab indicator
+Description:
 
-availability state
-
-skeleton
-
-small transitions
-
-Bad:
-
-everything flying in
-
-constant bouncing
-
-giant spring effects
-
-decorative animations that delay interaction.
+"Discover reliable local professionals based on your location, ratings and availability."
 
 ---
 
-# 74. VISUAL AUDIT SCREEN BY SCREEN
+# 9. SCREEN 1 VISUAL
 
-After all functionality is complete, perform another pass ONLY for design quality.
+Create an abstract premium LOCATION DISCOVERY visual.
 
-For each screen ask:
+Do NOT use a static generic location-pin icon.
 
-Does this look like a real production app?
+Create something more meaningful.
 
-Is hierarchy clear?
+Concept:
 
-Is spacing consistent?
+User/current location at the center.
 
-Are there too many cards?
+Around the user:
 
-Are there unnecessary borders?
+3–4 nearby professional markers.
 
-Are buttons consistent?
+Possible professional categories:
 
-Does dark mode look intentionally designed?
+Garage
+Electrician
+Plumber
+Technician
 
-Is important information visible quickly?
+Use icons from the existing global icon system.
 
-Does this screen feel cluttered?
+Connect nearby providers visually using:
 
-Does this screen feel empty?
+subtle map/grid lines
+distance rings
+route paths
+location indicators
 
-Are icons aligned?
+The user's location should be visually strongest.
 
-Are typography weights consistent?
+Use the Nearist gradient around the primary location element.
 
-Is the primary action obvious?
+Provider markers should be more neutral.
 
-If not:
+This communicates:
 
-REDESIGN IT.
+YOU
 
-Do not accept mediocre screens simply because they technically work.
+→
 
----
-
-# 75. CUSTOMER FLOW TEST
-
-Test this entire flow:
-
-Launch
-
-→ Onboarding
-
-→ Login
-
-→ OTP
-
-→ Customer Role
-
-→ Profile Setup
-
-→ Home
-
-→ Select Bike
-
-→ Select Puncture
-
-→ Results
-
-→ Apply Available Now
-
-→ Open Garage
-
-→ Favorite Garage
-
-→ Message Garage
-
-→ Send Quick Reply
-
-→ Open Messages
-
-→ Open Chat
-
-→ Saved
-
-→ Profile
-
-→ Appearance
-
-→ Dark Mode
-
-Every step must work.
+PROFESSIONALS AROUND YOU
 
 ---
 
-# 76. PROVIDER FLOW TEST
+# 10. SCREEN 1 VISUAL DETAILS
 
-Test:
+Use a large abstract discovery area approximately occupying the upper-middle portion.
 
-Launch/Login
+Possible structure:
 
-→ Provider Role
+```
+    Garage
 
-→ Provider Registration
+      ●
 
-→ Submit
 
-→ Pending Verification
+●           ●
+```
 
-→ Provider Dashboard
+Plumber        Electrician
 
-→ Change Available → Busy
+```
+      ◎
+     YOU
 
-→ Messages
 
-→ Open Customer Chat
+    ●
+ Technician
+```
 
-→ Send Reply
+But create a polished visual, not a literal diagram.
 
-→ Garage
+Add subtle radial location rings around the user.
 
-→ Edit Business
+Use extremely low-opacity map/path lines behind the markers.
 
-→ Manage Services
+Animate gently:
 
-→ Change Brands
+Main user marker appears.
 
-→ Edit Hours
+Location ring expands/fades once.
 
-→ Edit Location
+Provider markers fade/scale into position.
 
-→ Reviews
-
-→ Report Review
-
-→ Profile
-
-→ Verification
-
-→ Appearance
-
-Every step must work.
+Do NOT make the animation repeat constantly.
 
 ---
 
-# 77. DARK MODE TEST
+# 11. SCREEN 2 — TRUST & COMPARE
 
-Navigate EVERY major screen in Dark Mode.
+PURPOSE:
 
-Fix:
+Communicate:
 
-bad borders
+"I can compare providers before choosing."
 
-washed text
+Headline:
 
-white backgrounds
+"Choose with confidence."
 
-invisible icons
+Description:
 
-wrong shadows
-
-bad chips
-
-bad inputs
-
-bad chat bubbles
-
-bad bottom sheets
-
-bad navigation
-
-Dark mode should feel as polished as light mode.
+"Compare services, ratings, reviews and availability before you connect."
 
 ---
 
-# 78. PROJECT CLEANUP
+# 12. SCREEN 2 VISUAL
 
-When implementation is complete:
+Create a premium layered provider comparison visual.
 
-Remove:
+Show approximately 3 provider preview cards.
 
-unused imports
+Do NOT create three giant full-width cards.
 
-obsolete components
+Use layered/floating mini provider cards.
 
-unused starter files
+The center/front provider should be visually selected.
 
-duplicate routes
+Example information:
 
-dead styles
+QuickFix Garage
 
-unused mock files
+4.8 ★
 
-old TypeScript application files
+1.2 km
 
-console.log debugging
+● Available
 
-Fix warnings where practical.
+Verified
 
-Do NOT leave:
+Other cards can show:
 
-`Screen2`
+4.6 ★
+2.4 km
 
-`TestComponent`
+and
 
-`Temp`
+4.9 ★
+3.1 km
 
-`OldHome`
-
-`NewHome2`
-
-or similar garbage naming.
+Do NOT overload them.
 
 ---
 
-# 79. DO NOT BUILD FUTURE FEATURES
+# 13. SELECTED PROVIDER
 
-Do NOT add:
+The selected provider card should have:
 
-payments
+slightly stronger surface
 
-booking
+subtle brand border
 
-mechanic tracking
+possibly very subtle soft brand gradient
 
-AI diagnosis
-
-subscriptions
-
-spare-parts marketplace
-
-electricians
-
-plumbers
-
-carpenters
-
-roadside dispatch
-
-The MVP remains:
-
-GARAGES.
-
-Architecture may support future categories.
-
----
-
-# 80. MOST IMPORTANT PRODUCT PRINCIPLE
-
-The customer should be able to answer:
-
-"Which good garage near me can actually help me right now?"
-
-within seconds.
-
-Therefore prioritize:
-
-Location
-
-Distance
+Verified indicator
 
 Rating
 
-Services
-
-Open/Closed
+Distance
 
 Availability
+
+The card should immediately communicate:
+
+"This provider looks trustworthy."
+
+Do NOT use a giant gradient card.
+
+---
+
+# 14. SCREEN 2 ANIMATION
+
+When screen 2 becomes active:
+
+Provider cards should enter subtly.
+
+Example:
+
+back cards:
+
+fade + small horizontal movement
+
+selected card:
+
+fade + slight upward movement
+
+Verified badge:
+
+small scale appearance
+
+Keep animation approximately within existing global animation timings.
+
+No dramatic spring/bounce.
+
+---
+
+# 15. SCREEN 3 — CONNECT
+
+PURPOSE:
+
+Communicate:
+
+"When I need someone, Nearist helps me connect quickly."
+
+Headline:
+
+"Help is just a tap away."
+
+Description:
+
+"Connect with trusted local professionals whenever you need them."
+
+---
+
+# 16. SCREEN 3 VISUAL
+
+Create a connection visual.
+
+Concept:
+
+CUSTOMER
+
+↓
+
+NEARIST
+
+↓
+
+LOCAL PROFESSIONAL
+
+Do NOT literally display this as plain arrows/text.
+
+Create a polished visual representation.
+
+For example:
+
+User avatar/location point on left.
+
+Professional/provider on right.
+
+Nearist gradient connection line between them.
+
+Around the connection, subtly show:
 
 Message
 
 Call
 
-Directions
+Location
 
-The Provider should be able to answer customers with minimal effort.
+icons.
 
-Therefore prioritize:
-
-Availability
-
-Messages
-
-Quick Replies
-
-Garage Information
+The central connection line should use the Nearist gradient.
 
 ---
 
-# 81. FINAL COMPLETION REQUIREMENT
+# 17. SCREEN 3 VISUAL STORY
 
-DO NOT finish the task merely because all files compile.
+The visual should communicate:
 
-The task is complete ONLY when:
+FIND
 
-* every required screen exists
-* every bottom tab works
-* every important button works locally
-* Customer flow works
-* Provider flow works
-* mock chat works
-* favorites work
-* filters work
-* sorting works
-* theme switching works
-* provider availability works
-* profile editing works
-* service editing works
-* hours editing works
-* review interactions work
-* verification states work
-* navigation works
-* dark mode works
-* no screen is visibly broken
-* no major screen feels unfinished
-* layouts work on common Android widths
-* JavaScript/JSX is used
-* no duplicate TypeScript application routes remain
-* design tokens are centralized
-* components are reusable
-* UI is visually consistent
-* empty/loading/error states exist
-* the application runs successfully
+→
+
+CONNECT
+
+→
+
+GET HELP
+
+without needing explanatory labels.
+
+Possible animation:
+
+Customer appears.
+
+Professional appears.
+
+Gradient connection path draws between them.
+
+Message/location indicators fade in.
+
+Animation should happen once.
+
+No infinite moving connection.
 
 ---
 
-# 82. DO NOT JUST TELL ME WHAT IS WRONG — FIX IT
+# 18. PROGRESS INDICATOR
 
-Do not return only an audit report.
+Create a premium onboarding progress indicator.
 
-After identifying problems:
+Do NOT use three giant circles.
 
-IMPLEMENT THE FIXES.
+Recommended:
 
-If a screen is ugly:
+3 compact segments.
 
-REDESIGN IT.
+Example:
 
-If a component is duplicated:
+━━━  ━━━  ━━━
 
-REFACTOR IT.
+Current segment:
 
-If a route is missing:
+Nearist gradient.
 
-CREATE IT.
+Completed:
 
-If a button does nothing:
+brand blue/indigo or subtle gradient.
 
-IMPLEMENT ITS LOCAL FRONTEND BEHAVIOR.
+Upcoming:
 
-If dark mode is broken:
+muted surface.
 
-FIX IT.
-
-If a screen is missing:
-
-BUILD IT.
-
-If mock data is poor:
-
-IMPROVE IT.
-
-If navigation is broken:
-
-REPAIR IT.
-
-If the existing design system is inconsistent:
-
-REPLACE/REFACTOR IT.
+Keep the entire indicator compact.
 
 ---
 
-# 83. WORK IN PASSES
+# 19. TOP SKIP ACTION
 
-Do not randomly modify the project.
+Screens 1 and 2:
 
-Use this order:
+Show:
 
-PASS 1
-Project and route audit
+Skip
 
-PASS 2
-Design system + theme repair
+Top right.
 
-PASS 3
-Reusable components
+Use:
 
-PASS 4
-Authentication screens
+Inter Medium
 
-PASS 5
-Customer screens
+theme.colors.textSecondary
 
-PASS 6
-Customer functionality
+Do NOT put Skip inside a giant button.
 
-PASS 7
-Provider screens
+Touch target must still be at least approximately 44×44.
 
-PASS 8
-Provider functionality
+On screen 3:
 
-PASS 9
-Messaging
-
-PASS 10
-Loading / empty / error states
-
-PASS 11
-Dark mode audit
-
-PASS 12
-Responsive/layout audit
-
-PASS 13
-Navigation/functionality audit
-
-PASS 14
-Visual polish
-
-PASS 15
-Final project cleanup
-
-After each pass, ensure you did not break previously working functionality.
+Skip may disappear.
 
 ---
 
-# 84. FINAL DESIGN EXPECTATION
+# 20. PRIMARY CTA
 
-The finished application should feel like something that could realistically be released on Google Play after backend integration.
+SCREEN 1:
 
-It should NOT feel like:
+Continue
 
-a school project
+SCREEN 2:
 
-a basic Expo template
+Continue
 
-a generic CRUD application
+SCREEN 3:
 
-an admin dashboard converted to mobile
+Get Started
 
-an AI-generated UI kit
+Use the existing Nearist GradientButton.
 
-It should feel like:
+Do NOT create another button implementation.
 
-a carefully designed modern local-services marketplace
+Button should be:
 
-with excellent:
+full width
 
-discovery
+approximately 52px height
 
-trust
+existing global radius
 
-location awareness
+Nearist gradient
 
-availability
+white text
 
-communication
+---
 
-and provider management.
+# 21. OPTIONAL BACK ACTION
 
-Prioritize excellent visual hierarchy and usability over decorative complexity.
+Screen 1:
 
-When uncertain between two UI approaches, choose the one that is:
+No back action.
 
-cleaner
+Screens 2 and 3:
 
-simpler
+Allow swipe/back if appropriate.
 
-faster
+You may also provide a subtle back control if it improves UX.
 
-more intuitive
+Do NOT clutter the bottom area with:
 
-more premium
+Back + Next + Skip
 
-and more consistent with the rest of the application.
+all together.
 
-DO NOT stop until the entire application has been audited and the weak/broken UI has actually been improved.
+Keep onboarding simple.
+
+---
+
+# 22. SWIPE SUPPORT
+
+Allow horizontal swipe between onboarding pages.
+
+Use an appropriate performant React Native approach such as:
+
+FlatList paging
+
+or reuse the existing onboarding implementation if already present.
+
+Do NOT introduce a heavy carousel dependency unnecessarily.
+
+Swiping must synchronize correctly with:
+
+progress indicator
+current page
+button state
+
+---
+
+# 23. CONTINUE BEHAVIOR
+
+Continue on Screen 1:
+
+→ Screen 2
+
+Continue on Screen 2:
+
+→ Screen 3
+
+Get Started:
+
+→ Mark onboarding as completed
+
+→ Continue into the existing app routing/auth flow.
+
+Do NOT hardcode navigation directly to Home if the application has authentication or role logic that should run first.
+
+Respect existing routing architecture.
+
+---
+
+# 24. SKIP BEHAVIOR
+
+When user taps:
+
+Skip
+
+Mark onboarding as completed.
+
+Then continue into the existing routing flow.
+
+Do NOT show onboarding again every time the app launches.
+
+---
+
+# 25. ONBOARDING PERSISTENCE
+
+Use the existing project persistence approach.
+
+If onboarding state already exists:
+
+reuse it.
+
+Otherwise use an appropriate existing storage mechanism.
+
+Store something conceptually like:
+
+hasCompletedOnboarding = true
+
+Do NOT introduce an entire state management library just for this.
+
+---
+
+# 26. SPLASH INTEGRATION
+
+The previously implemented Splash Screen should determine whether onboarding needs to appear.
+
+Expected flow:
+
+APP START
+
+↓
+
+SPLASH / INITIALIZATION
+
+↓
+
+Has user completed onboarding?
+
+NO
+
+→ ONBOARDING
+
+YES
+
+→ Continue existing app flow
+
+Do NOT show onboarding before Splash.
+
+Do NOT create navigation loops.
+
+---
+
+# 27. ONBOARDING SHOULD SHOW ONCE
+
+Once completed or skipped:
+
+Do not show onboarding again during normal launches.
+
+For development purposes, it is okay to provide a simple way to reset onboarding state manually, but do NOT expose a developer reset button in production UI.
+
+---
+
+# 28. RESPONSIVENESS
+
+Test the onboarding visually for:
+
+360px width
+
+375px
+
+390px
+
+412px
+
+430px
+
+Also consider shorter Android screens.
+
+Do NOT make the illustration so large that:
+
+headline
+description
+progress
+CTA
+
+get pushed off-screen.
+
+The visual area should respond to available height.
+
+---
+
+# 29. TEXT RESPONSIVENESS
+
+Do NOT use fixed heights around headings/descriptions.
+
+Allow text to wrap naturally.
+
+Do not reduce fonts randomly on individual devices.
+
+Use existing typography tokens.
+
+---
+
+# 30. DARK MODE
+
+The onboarding should use Nearist's branded dark experience as the primary onboarding presentation.
+
+This creates continuity:
+
+Splash
+
+→
+
+Onboarding
+
+Both should feel like one branded opening experience.
+
+Do NOT make onboarding suddenly switch to bright white immediately after the dark Splash.
+
+---
+
+# 31. LIGHT MODE
+
+The user's chosen Light/Dark/System preference should still be preserved globally.
+
+However, the initial branded onboarding experience may use the Nearist dark branded presentation consistently if that matches the existing Splash implementation.
+
+Do not break global theme settings.
+
+---
+
+# 32. ICONS
+
+Use the existing global icon library.
+
+Prefer the icon system established during Step 1.
+
+Do NOT use emojis such as:
+
+🔧
+⚡
+🚗
+📍
+
+in production UI.
+
+Use proper vector icons.
+
+---
+
+# 33. ILLUSTRATIONS
+
+Prefer creating the onboarding visuals from:
+
+React Native Views
+
+icons
+
+gradients
+
+simple shapes
+
+lines
+
+subtle map patterns
+
+instead of loading large raster illustrations.
+
+This keeps the onboarding:
+
+fast
+
+responsive
+
+theme-consistent.
+
+Do NOT download random stock illustrations.
+
+---
+
+# 34. NO HUGE CARDS
+
+Do not put the entire onboarding content inside a large rounded card.
+
+The background itself should provide the visual canvas.
+
+Cards should only appear where conceptually useful, such as provider previews on Screen 2.
+
+---
+
+# 35. NO EXCESSIVE TEXT
+
+Each onboarding page should have:
+
+ONE headline
+
+ONE short description
+
+ONE primary CTA
+
+Do not add paragraphs explaining Nearist.
+
+The onboarding must be understandable within seconds.
+
+---
+
+# 36. TRANSITIONS BETWEEN PAGES
+
+Page transitions should feel smooth.
+
+Horizontal movement should correspond naturally with swipe direction.
+
+Visual content may use subtle:
+
+fade
+translate
+scale
+
+when page becomes active.
+
+Do NOT replay distracting animations repeatedly while scrolling slightly between pages.
+
+---
+
+# 37. HAPTICS
+
+If the project already uses Expo Haptics, optionally use very subtle haptic feedback for:
+
+Continue
+
+Get Started
+
+Do NOT install/use it solely for unnecessary effects unless appropriate.
+
+Do not vibrate on every swipe.
+
+---
+
+# 38. ACCESSIBILITY
+
+Ensure:
+
+Skip is accessible.
+
+Continue is accessible.
+
+Get Started is accessible.
+
+Progress has appropriate accessibility information where possible.
+
+Text contrast is sufficient.
+
+Touch targets are large enough.
+
+Animations should not prevent interaction.
+
+---
+
+# 39. PERFORMANCE
+
+Onboarding must remain lightweight.
+
+Do NOT use:
+
+videos
+
+large Lottie animations
+
+remote background assets
+
+large PNG sequences
+
+heavy 3D effects
+
+The experience should load immediately after Splash.
+
+---
+
+# 40. FILE ORGANIZATION
+
+Keep onboarding implementation organized.
+
+Possible structure:
+
+app/
+onboarding/
+index.jsx
+
+or reuse the existing Expo Router structure.
+
+Reusable onboarding-specific components may live somewhere such as:
+
+src/
+components/
+onboarding/
+OnboardingVisualDiscover.jsx
+OnboardingVisualCompare.jsx
+OnboardingVisualConnect.jsx
+OnboardingProgress.jsx
+
+Only create components when they improve maintainability.
+
+Do NOT over-engineer.
+
+---
+
+# 41. DO NOT MODIFY GLOBAL TOKENS
+
+The global design system is already established.
+
+Do NOT change global:
+
+brand colors
+
+gradient
+
+radius
+
+typography
+
+spacing
+
+because an onboarding layout is difficult to implement.
+
+Adapt the onboarding to the system.
+
+Only fix global tokens if there is a genuine implementation bug.
+
+---
+
+# 42. FINAL VISUAL QUALITY CHECK
+
+Compare:
+
+Splash
+
+and
+
+Onboarding
+
+They must clearly belong to the same product.
+
+Check:
+
+background
+
+gradient
+
+logo treatment
+
+typography
+
+spacing
+
+glow
+
+animation
+
+iconography
+
+brand tone
+
+There should be no sudden design-language change.
+
+---
+
+# 43. FUNCTIONALITY CHECK
+
+Before completing this task verify:
+
+Splash → Onboarding works.
+
+Skip works.
+
+Continue works.
+
+Swipe works.
+
+Progress updates correctly.
+
+Get Started works.
+
+Completion state persists.
+
+App restart does not show onboarding again after completion.
+
+Existing routing after onboarding works.
+
+Android back behavior is correct.
+
+No navigation loops.
+
+No console errors.
+
+No broken SafeArea.
+
+No TypeScript files introduced.
+
+---
+
+# 44. FINAL EXPERIENCE
+
+The complete opening flow should now feel like:
+
+NEARIST SPLASH
+
+"Whatever You Need, Nearist."
+
+↓
+
+DISCOVER
+
+"Find trusted help nearby."
+
+↓
+
+TRUST
+
+"Choose with confidence."
+
+↓
+
+CONNECT
+
+"Help is just a tap away."
+
+↓
+
+GET STARTED
+
+↓
+
+Existing Nearist application flow.
+
+The user should understand Nearist before reaching the main app without reading a long explanation.
+
+---
+
+# 45. IMPORTANT — STOP HERE
+
+Implement ONLY the complete Onboarding experience.
+
+DO NOT redesign Home after completing this.
+
+DO NOT redesign Search.
+
+DO NOT redesign Explore.
+
+DO NOT continue into authentication.
+
+Once Onboarding is implemented and fully tested:
+
+STOP.
+
+The next task will redesign the Nearist Home Screen using the same established design system.

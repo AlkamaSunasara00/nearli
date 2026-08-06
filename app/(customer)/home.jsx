@@ -82,7 +82,7 @@ export default function HomeScreen() {
   };
 
   return (
-    <View style={[styles.flex1, { backgroundColor: theme.colors.background }]}>
+    <View style={[styles.flex1, { backgroundColor: 'transparent' }]}>
       
       {/* FIXED STICKY GREEN HEADER */}
       <View style={[styles.fixedHeader, { paddingTop: insets.top, backgroundColor: theme.colors.brandDark }]}>

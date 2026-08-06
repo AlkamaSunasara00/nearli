@@ -57,7 +57,7 @@ export default function ProviderProfileScreen() {
   };
 
   return (
-    <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
+    <View style={[styles.container, { backgroundColor: 'transparent' }]}>
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <View style={styles.header}>
           <Avatar name={user?.name || "Provider Owner"} size={80} style={styles.avatar} />

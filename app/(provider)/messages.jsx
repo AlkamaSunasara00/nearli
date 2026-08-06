@@ -22,7 +22,7 @@ export default function ProviderMessagesScreen() {
   });
 
   return (
-    <View style={[styles.container, { backgroundColor: theme.colors.background, paddingTop: insets.top }]}>
+    <View style={[styles.container, { backgroundColor: 'transparent', paddingTop: insets.top }]}>
       <View style={[styles.header, { borderBottomColor: theme.colors.border }]}>
         <Typography variant="h2" weight="bold" color="textPrimary" style={styles.title}>
           Inbox

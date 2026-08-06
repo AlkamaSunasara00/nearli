@@ -41,7 +41,7 @@ export default function GarageScreen() {
   ); // fallback arrow
 
   return (
-    <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
+    <View style={[styles.container, { backgroundColor: 'transparent' }]}>
       <ScrollView contentContainerStyle={[styles.scrollContent, { paddingTop: insets.top }]}>
         <View style={styles.coverContainer}>
           <Image source={{ uri: garage.photo }} style={styles.coverImage} />

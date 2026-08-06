@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "Nearli",
-    "slug": "Nearli",
+    "name": "NEARIST",
+    "slug": "NEARIST",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "nearli",
+    "scheme": "nearist",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
@@ -20,7 +20,7 @@
       },
       "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false,
-      "package": "ycom.nearli.app"
+      "package": "ycom.nearist.app"
     },
     "web": {
       "output": "static",
@@ -34,12 +34,13 @@
           "image": "./assets/images/splash-icon.png",
           "imageWidth": 200,
           "resizeMode": "contain",
-          "backgroundColor": "#ffffff",
+          "backgroundColor": "#111A32",
           "dark": {
-            "backgroundColor": "#000000"
+            "backgroundColor": "#111A32"
           }
         }
-      ]
+      ],
+      "expo-font"
     ],
     "experiments": {
       "typedRoutes": true,

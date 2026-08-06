@@ -1,5 +1,6 @@
 import React from 'react';
-import { View, StyleSheet, Dimensions, SafeAreaView } from 'react-native';
+import { View, StyleSheet, Dimensions } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useAppTheme } from '../../src/hooks/useAppTheme';
@@ -24,7 +25,7 @@ export default function WelcomeScreen() {
   };
 
   return (
-    <SafeAreaView style={[styles.safeArea, { backgroundColor: theme.colors.background }]}>
+    <SafeAreaView style={[styles.safeArea, { backgroundColor: 'transparent' }]}>
       <View style={styles.container}>
         
         {/* Custom Illustration */}

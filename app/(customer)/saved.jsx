@@ -19,7 +19,7 @@ export default function SavedScreen() {
   const savedGarages = garages.filter(g => savedGarageIds.includes(g.id));
 
   return (
-    <View style={[styles.container, { backgroundColor: theme.colors.background, paddingTop: insets.top }]}>
+    <View style={[styles.container, { backgroundColor: 'transparent', paddingTop: insets.top }]}>
       <View style={styles.header}>
         <Typography variant="h2" weight="bold" color="textPrimary">Saved</Typography>
       </View>

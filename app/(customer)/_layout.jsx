@@ -11,6 +11,7 @@ export default function CustomerLayout() {
   return (
     <>
     <Tabs
+      sceneContainerStyle={{ backgroundColor: 'transparent' }}
       screenOptions={{
         headerShown: false,
         tabBarShowLabel: true,
