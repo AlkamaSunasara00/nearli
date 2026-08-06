@@ -55,7 +55,7 @@ const RoleCard = ({ type, title, description, icon, isSelected, onPress, theme, 
                 { backgroundColor: isSelected ? theme.colors.primary : theme.colors.surfaceSecondary },
               ]}
             >
-              {icon(isSelected ? '#FFFFFF' : theme.colors.primary)}
+              {icon(isSelected ? theme.colors.surface : theme.colors.primary)}
             </View>
             <View style={[styles.checkCircle, { opacity: isSelected ? 1 : 0 }]}>
                <CheckCircle2 size={24} color={theme.colors.primary} />

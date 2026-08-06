@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useRouter } from 'expo-router';
 import {
   Activity,
@@ -23,6 +24,7 @@ import { SmallProviderCard } from '../../src/components/cards/SmallProviderCard'
 import { Avatar } from '../../src/components/ui/Avatar';
 import { PromoBanner } from '../../src/components/ui/PromoBanner';
 import { Typography } from '../../src/components/ui/Typography';
+import { SearchDiscoveryOverlay } from '../../src/components/ui/SearchDiscoveryOverlay';
 import { mockGarages } from '../../src/data/mockGarages';
 import { useAppTheme } from '../../src/hooks/useAppTheme';
 
@@ -56,6 +58,7 @@ export default function HomeScreen() {
   const { theme } = useAppTheme();
   const router = useRouter();
   const insets = useSafeAreaInsets();
+  const [isSearchActive, setIsSearchActive] = useState(false);
 
   const handleGaragePress = (id) => {
     router.push(`/garage/${id}`);
@@ -87,22 +90,22 @@ export default function HomeScreen() {
         {/* Top Row: Greeting & Avatar */}
         <Animated.View entering={FadeInDown.duration(600)} style={styles.headerRow}>
           <View style={styles.headerLeft}>
-            <Typography variant="bodyMedium" style={{ color: '#E2E8F0', marginBottom: 2 }}>Good Morning 👋</Typography>
-            <Typography variant="h2" weight="bold" style={{ color: '#FFF' }}>Akama</Typography>
+            <Typography variant="bodyMedium" style={{ color: theme.colors.surfaceSecondary, marginBottom: 2 }}>Good Morning 👋</Typography>
+            <Typography variant="h2" weight="bold" style={{ color: theme.colors.surface }}>Akama</Typography>
             <TouchableOpacity style={styles.locationRow}>
-              <MapPin size={14} color="#FFF" />
-              <Typography variant="caption" weight="medium" style={{ color: '#E2E8F0', marginHorizontal: 6 }}>
+              <MapPin size={14} color={theme.colors.surface} />
+              <Typography variant="caption" weight="medium" style={{ color: theme.colors.surfaceSecondary, marginHorizontal: 6 }}>
                 Ahmedabad, Gujarat
               </Typography>
-              <ChevronDown size={14} color="#E2E8F0" />
+              <ChevronDown size={14} color={theme.colors.surfaceSecondary} />
             </TouchableOpacity>
           </View>
           
           <View style={styles.headerRight}>
             <TouchableOpacity onPress={() => router.push('/(customer)/profile')} style={{ flexDirection: 'row', alignItems: 'center' }}>
               <View style={styles.bellIcon}>
-                <Bell size={24} color="#FFF" />
-                <View style={[styles.notificationDot, { borderColor: theme.colors.brandDark }]} />
+                <Bell size={24} color={theme.colors.surface} />
+                <View style={[styles.notificationDot, { borderColor: theme.colors.brandDark, backgroundColor: theme.colors.danger }]} />
               </View>
               <Avatar name="Akama" size={44} />
             </TouchableOpacity>
@@ -112,13 +115,13 @@ export default function HomeScreen() {
         {/* Search Bar inside Green Header */}
         <Animated.View entering={FadeInDown.duration(600).delay(100)} style={styles.searchContainer}>
           <TouchableOpacity 
-            style={[styles.searchBar, { backgroundColor: '#FFFFFF', ...theme.shadows.md }]} 
-            onPress={() => router.push('/(customer)/explore')}
+            style={[styles.searchBar, { backgroundColor: theme.colors.surface, ...theme.shadows.md }]} 
+            onPress={() => setIsSearchActive(true)}
             activeOpacity={0.9}
           >
             <Search size={20} color={theme.colors.textMuted} />
             <Typography variant="bodyMedium" style={[styles.searchInput, { color: theme.colors.textPrimary }]}>
-              Search garages, services, brands or problems...
+              Search garages, services and brands
             </Typography>
             <View style={styles.filterIcon}>
               <SlidersHorizontal size={18} color={theme.colors.textSecondary} />
@@ -141,7 +144,7 @@ export default function HomeScreen() {
              description="Find garages available near you instantly."
              buttonText="Find Nearby"
              delay={300}
-             onPress={() => router.push('/(customer)/explore')}
+             onPress={() => setIsSearchActive(true)}
            />
         </View>
 
@@ -162,7 +165,7 @@ export default function HomeScreen() {
         <Animated.View entering={FadeInUp.duration(600).delay(400)} style={styles.section}>
           <View style={styles.sectionHeader}>
             <Typography variant="title" weight="bold" color="textPrimary">Available Near You</Typography>
-            <TouchableOpacity onPress={() => router.push('/(customer)/explore')}>
+            <TouchableOpacity onPress={() => setIsSearchActive(true)}>
               <Typography variant="bodyMedium" color="primary" weight="bold">See All</Typography>
             </TouchableOpacity>
           </View>
@@ -214,6 +217,12 @@ export default function HomeScreen() {
         </Animated.View>
 
       </ScrollView>
+
+      {/* SEARCH DISCOVERY OVERLAY */}
+      <SearchDiscoveryOverlay 
+        visible={isSearchActive} 
+        onClose={() => setIsSearchActive(false)} 
+      />
     </View>
   );
 }
@@ -229,8 +238,8 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     zIndex: 10,
-    borderBottomLeftRadius: 32,
-    borderBottomRightRadius: 32,
+    borderBottomLeftRadius: 15,
+    borderBottomRightRadius: 15,
     paddingBottom: 24,
   },
   headerRow: {
@@ -264,9 +273,7 @@ const styles = StyleSheet.create({
     width: 10,
     height: 10,
     borderRadius: 5,
-    backgroundColor: '#EF4444',
     borderWidth: 2,
-    borderColor: '#0F3D3E', // match brandDark
   },
   container: {
     flex: 1,
@@ -289,6 +296,7 @@ const styles = StyleSheet.create({
   searchInput: {
     flex: 1,
     marginLeft: 12,
+    fontSize:12
   },
   filterIcon: {
     marginLeft: 8,
@@ -321,7 +329,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 8,
-    backgroundColor: '#F8FAFC',
+    backgroundColor: '#F8FAFC', // already correct background, or you could use theme.colors.background inline
   },
   serviceLabel: {
     textAlign: 'center',

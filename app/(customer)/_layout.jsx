@@ -1,25 +1,43 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Tabs } from 'expo-router';
-import { Home, Compass, MessageSquare, Bookmark, User } from 'lucide-react-native';
+import { Home, Compass, MessageSquare, Bookmark, User, Search } from 'lucide-react-native';
 import { useAppTheme } from '../../src/hooks/useAppTheme';
+import { SearchDiscoveryOverlay } from '../../src/components/ui/SearchDiscoveryOverlay';
 
 export default function CustomerLayout() {
   const { theme } = useAppTheme();
+  const [isGlobalSearchActive, setIsGlobalSearchActive] = useState(false);
 
   return (
+    <>
     <Tabs
       screenOptions={{
         headerShown: false,
-        tabBarActiveTintColor: theme.colors.primary,
-        tabBarInactiveTintColor: theme.colors.textMuted,
+        tabBarShowLabel: true,
+        tabBarLabelStyle: {
+          fontSize: 11,
+          fontWeight: '600',
+          marginBottom: 8,
+        },
+        tabBarActiveTintColor: theme.colors.surface,
+        tabBarInactiveTintColor: 'rgba(255, 255, 255, 0.5)',
         tabBarStyle: {
-          backgroundColor: theme.colors.surface,
-          borderTopColor: theme.colors.border,
-          elevation: theme.shadows.md.elevation,
-          shadowColor: theme.shadows.md.shadowColor,
-          shadowOffset: theme.shadows.md.shadowOffset,
-          shadowOpacity: theme.shadows.md.shadowOpacity,
-          shadowRadius: theme.shadows.md.shadowRadius,
+          backgroundColor: theme.colors.primary,
+          borderTopWidth: 0,
+          position: 'absolute',
+          bottom: 0,
+          left: 0,
+          right: 0,
+          height: 70,
+          borderTopLeftRadius: 15,
+          borderTopRightRadius: 15,
+          paddingBottom: 8,
+          paddingTop: 8,
+          elevation: 16,
+          shadowColor: theme.colors.primary,
+          shadowOffset: { width: 0, height: -4 },
+          shadowOpacity: 0.2,
+          shadowRadius: 12,
         },
       }}
     >
@@ -38,12 +56,20 @@ export default function CustomerLayout() {
         }}
       />
       <Tabs.Screen
-        name="messages"
+        name="search"
         options={{
-          title: 'Messages',
-          tabBarIcon: ({ color, size }) => <MessageSquare color={color} size={size} />,
+          title: 'Search',
+          tabBarIcon: ({ color, size }) => <Search color={color} size={size} />,
+        }}
+        listeners={{
+          tabPress: (e) => {
+            e.preventDefault();
+            setIsGlobalSearchActive(true);
+          },
         }}
       />
+
+
       <Tabs.Screen
         name="profile"
         options={{
@@ -58,5 +84,10 @@ export default function CustomerLayout() {
         }}
       />
     </Tabs>
+    <SearchDiscoveryOverlay 
+      visible={isGlobalSearchActive} 
+      onClose={() => setIsGlobalSearchActive(false)} 
+    />
+    </>
   );
 }

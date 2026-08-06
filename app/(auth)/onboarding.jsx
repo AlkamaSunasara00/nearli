@@ -20,7 +20,7 @@ const Illustration1 = ({ theme }) => (
       </View>
     </View>
     <View style={[styles.floatingPin, { backgroundColor: theme.colors.accent }]}>
-      <MapPin size={24} color="#FFF" />
+      <MapPin size={24} color={theme.colors.surface} />
     </View>
     <View style={[styles.verifiedBadge, { backgroundColor: theme.colors.primarySoft }]}>
       <ShieldCheck size={20} color={theme.colors.primary} />
@@ -59,11 +59,11 @@ const Illustration3 = ({ theme }) => (
       <View style={[styles.skeletonLine, { width: 100, backgroundColor: theme.colors.border }]} />
     </View>
     <View style={[styles.chatBubbleRight, { backgroundColor: theme.colors.primary }]}>
-      <MessageSquare size={16} color="#FFF" style={{ marginRight: 8 }} />
+      <MessageSquare size={16} color={theme.colors.surface} style={{ marginRight: 8 }} />
       <View style={[styles.skeletonLine, { width: 60, backgroundColor: 'rgba(255,255,255,0.5)' }]} />
     </View>
-    <View style={[styles.mechanicBadge, { backgroundColor: theme.colors.accent }]}>
-      <User size={24} color="#FFF" />
+    <View style={[styles.mechanicBadge, { backgroundColor: theme.colors.accent, borderColor: theme.colors.surface }]}>
+      <User size={24} color={theme.colors.surface} />
     </View>
   </View>
 );
@@ -197,7 +197,7 @@ const styles = StyleSheet.create({
   illustrationBase: {
     width: 240,
     height: 240,
-    backgroundColor: '#E2E8F0', // Light base for illustration
+    backgroundColor: '#E2E8F0', // Light base for illustration - better to keep as light grey, or use theme in style array but can't inject here
     borderRadius: 120,
     alignItems: 'center',
     justifyContent: 'center',
@@ -287,7 +287,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 4,
-    borderColor: '#FFF',
+    // borderColor: '#FFF', (moved to dynamic style)
   },
   title: {
     marginBottom: 16,

@@ -43,7 +43,7 @@ export default function SavedScreen() {
             title="No saved garages yet"
             description="Tap the bookmark icon on any garage to save it for later."
             actionTitle="Explore Garages"
-            onAction={() => router.push('/(customer)/explore')}
+            onAction={() => router.push('/(customer)/home')}
           />
         }
       />

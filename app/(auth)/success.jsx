@@ -30,7 +30,7 @@ export default function SuccessScreen() {
         {/* Animated Checkmark Illustration */}
         <Animated.View entering={FadeIn.duration(400)} style={styles.illustrationContainer}>
           <Animated.View style={[styles.circle, { backgroundColor: theme.colors.success }, animatedCheckStyle]}>
-            <Check size={48} color="#FFFFFF" strokeWidth={3} />
+            <Check size={48} color={theme.colors.surface} strokeWidth={3} />
           </Animated.View>
           
           {/* Decorative small particles mimicking confetti */}
@@ -59,11 +59,12 @@ export default function SuccessScreen() {
           fullWidth
           style={styles.button}
         />
-        <TouchableOpacity style={styles.secondaryButton} onPress={() => router.replace('/(auth)/login')}>
-          <Typography variant="body" weight="medium" color="primary">
-            Back to Login
-          </Typography>
-        </TouchableOpacity>
+        <Button
+          title="Back to Login"
+          variant="ghost"
+          onPress={() => router.replace('/(auth)/login')}
+          style={styles.secondaryButton}
+        />
       </Animated.View>
     </SafeAreaView>
   );

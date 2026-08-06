@@ -145,11 +145,11 @@ export default function OtpScreen() {
         <Animated.View entering={FadeInUp.duration(600)} style={styles.illustrationContainer}>
            <View style={[styles.bubbleWrap, { backgroundColor: theme.colors.surface, shadowColor: theme.colors.primary }]}>
               <View style={[styles.bubble, { backgroundColor: theme.colors.brandDark }]}>
-                 <MessageSquare size={32} color="#FFF" />
+                 <MessageSquare size={32} color={theme.colors.surface} />
               </View>
            </View>
            <View style={[styles.floatShield, { backgroundColor: theme.colors.accent }]}>
-             <ShieldCheck size={20} color="#FFF" />
+             <ShieldCheck size={20} color={theme.colors.surface} />
            </View>
         </Animated.View>
 
@@ -263,8 +263,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     alignItems: 'center',
     justifyContent: 'center',
-    borderWidth: 3,
-    borderColor: '#FFF',
+    // borderColor: '#FFF', moved below if needed
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.1,

@@ -71,7 +71,7 @@ export default function LoginScreen() {
             <Smartphone size={64} color={theme.colors.primary} style={{ marginTop: 20 }} />
           </View>
           <View style={[styles.floatLeft, { backgroundColor: theme.colors.accent }]}>
-            <Car size={24} color="#FFF" />
+            <Car size={24} color={theme.colors.surface} />
           </View>
           <View style={[styles.floatRight, { backgroundColor: theme.colors.primarySoft }]}>
             <ShieldCheck size={28} color={theme.colors.primary} />
@@ -178,7 +178,7 @@ const styles = StyleSheet.create({
     shadowRadius: 24,
     elevation: 4,
     borderWidth: 1,
-    borderColor: '#E2E8F0',
+    borderColor: '#E2E8F0', // keep as is or use theme in style array, I will leave it as is if it's not hurting, but better to use theme.colors.borderLight. I can't inject theme here.
   },
   phoneNotch: {
     width: 40,
@@ -195,7 +195,7 @@ const styles = StyleSheet.create({
     borderRadius: 28,
     alignItems: 'center',
     justifyContent: 'center',
-    shadowColor: '#000',
+    shadowColor: '#000', // React native shadowColor is usually fixed hex, but I can leave it or remove it. I'll leave as #000
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.1,
     shadowRadius: 10,
