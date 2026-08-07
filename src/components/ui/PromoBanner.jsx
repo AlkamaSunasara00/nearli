@@ -13,21 +13,21 @@ export const PromoBanner = ({ title, description, buttonText, onPress, delay = 0
       style={[
         styles.container, 
         { 
-          backgroundColor: '#F8FAFC',
+          backgroundColor: theme.colors.surface,
           borderRadius: 24,
           ...theme.shadows.sm
         }
       ]}
     >
       <View style={styles.content}>
-        <Typography variant="body" weight="bold" color="textPrimary" style={styles.title}>
+        <Typography variant="p2" weight="bold" color="textPrimary" style={styles.title}>
           {title}
         </Typography>
-        <Typography variant="caption" color="textSecondary" style={styles.description}>
+        <Typography variant="p3" color="textSecondary" style={styles.description}>
           {description}
         </Typography>
         <TouchableOpacity style={[styles.button, { backgroundColor: theme.colors.primary }]} onPress={onPress}>
-          <Typography variant="caption" weight="bold" style={{ color: '#FFF' }}>
+          <Typography variant="p3" weight="bold" style={{ color: theme.colors.white }}>
             {buttonText}
           </Typography>
         </TouchableOpacity>
@@ -57,11 +57,9 @@ const styles = StyleSheet.create({
   },
   title: {
     marginBottom: 6,
-    lineHeight: 22,
   },
   description: {
     marginBottom: 16,
-    lineHeight: 18,
   },
   button: {
     alignSelf: 'flex-start',

@@ -2,7 +2,6 @@ import React from 'react';
 import { TouchableOpacity, ActivityIndicator, StyleSheet, View } from 'react-native';
 import { useAppTheme } from '../../hooks/useAppTheme';
 import { Typography } from './Typography';
-import { LinearGradient } from 'expo-linear-gradient';
 
 export const Button = ({
   title,
@@ -19,13 +18,13 @@ export const Button = ({
 }) => {
   const { theme } = useAppTheme();
 
-  let height = 44;
+  let height = 48;
   let borderRadius = theme.radius.full;
   
   if (size === 'small') {
-    height = 36;
+    height = 40;
   } else if (size === 'large') {
-    height = 52;
+    height = 56;
   }
 
   const getContainerStyle = () => {
@@ -33,7 +32,9 @@ export const Button = ({
     let borderColor = 'transparent';
     let borderWidth = 0;
 
-    if (variant === 'secondary') {
+    if (variant === 'primary') {
+      backgroundColor = theme.colors.primary;
+    } else if (variant === 'secondary') {
       backgroundColor = theme.colors.surfaceElevated;
       borderColor = theme.colors.border;
       borderWidth = 1;
@@ -69,7 +70,7 @@ export const Button = ({
 
   const getTextColor = () => {
     if (disabled) return theme.colors.textMuted;
-    if (variant === 'primary' || variant === 'danger') return '#FFFFFF';
+    if (variant === 'primary' || variant === 'danger') return theme.colors.white;
     return theme.colors.text;
   };
 
@@ -91,27 +92,6 @@ export const Button = ({
   );
 
   const containerStyle = [getContainerStyle(), style];
-
-  if (variant === 'primary' && !disabled) {
-    return (
-      <TouchableOpacity
-        onPress={onPress}
-        disabled={loading}
-        activeOpacity={0.8}
-        style={[style, { width: fullWidth ? '100%' : undefined, height, borderRadius, overflow: 'hidden' }]}
-        {...props}
-      >
-        <LinearGradient
-          colors={theme.gradients.primary.colors}
-          start={theme.gradients.primary.start}
-          end={theme.gradients.primary.end}
-          style={{ flex: 1, alignItems: 'center', justifyContent: 'center', flexDirection: 'row', paddingHorizontal: theme.spacing.xl }}
-        >
-          {content}
-        </LinearGradient>
-      </TouchableOpacity>
-    );
-  }
 
   return (
     <TouchableOpacity

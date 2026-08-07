@@ -12,7 +12,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import { RefreshCw } from 'lucide-react-native';
 
-export const SwitchViewButton = ({ onPress, IconComponent, color = '#FFFFFF' }) => {
+export const SwitchViewButton = ({ onPress, IconComponent, color = '#FAFAFA' }) => {
   const rotation = useSharedValue(0);
 
   useEffect(() => {

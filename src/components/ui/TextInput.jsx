@@ -29,7 +29,7 @@ export const TextInput = ({
             backgroundColor: theme.colors.surfaceSecondary,
             borderColor: error ? theme.colors.danger : theme.colors.border,
             borderWidth: 1,
-            borderRadius: theme.radius.medium,
+            borderRadius: theme.radius.full,
           },
         ]}
       >

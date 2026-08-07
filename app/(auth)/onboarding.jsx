@@ -1,23 +1,11 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { View, StyleSheet, Dimensions, FlatList, TouchableOpacity } from 'react-native';
-import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
+import React, { useState } from 'react';
+import { View, StyleSheet, Dimensions, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { MapPin, User, CheckCircle, MessageSquare, Phone, ShieldCheck, Star, Wrench, Zap } from 'lucide-react-native';
-import Animated, { 
-  useAnimatedStyle, 
-  withTiming, 
-  useSharedValue, 
-  interpolate, 
-  Extrapolation,
-  withDelay,
-  Easing,
-  withSequence,
-  withRepeat,
-  withSpring
-} from 'react-native-reanimated';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { StatusBar } from 'expo-status-bar';
 import { LinearGradient } from 'expo-linear-gradient';
-import Svg, { Circle, Path, Defs, RadialGradient as SvgRadialGradient, Stop } from 'react-native-svg';
+import { Home, TreePine, Circle, Heart, ThumbsUp, CarFront } from 'lucide-react-native';
+import Animated, { FadeInRight, FadeIn } from 'react-native-reanimated';
 
 import { useAppTheme } from '../../src/hooks/useAppTheme';
 import { Typography } from '../../src/components/ui/Typography';
@@ -25,510 +13,1008 @@ import { Button } from '../../src/components/ui/Button';
 
 const { width, height } = Dimensions.get('window');
 
-// --- Screen 1 Visual: Discover ---
-const DiscoverVisual = ({ isActive, theme }) => {
-  const scale = useSharedValue(0.8);
-  const ringScale = useSharedValue(0.5);
-  const ringOpacity = useSharedValue(0);
-
-  useEffect(() => {
-    if (isActive) {
-      scale.value = withSpring(1, { damping: 12 });
-      ringScale.value = withRepeat(withSequence(withTiming(1.5, { duration: 1500 }), withTiming(0.5, { duration: 0 })), -1, false);
-      ringOpacity.value = withRepeat(withSequence(withTiming(0, { duration: 1500 }), withTiming(0.4, { duration: 0 })), -1, false);
-    } else {
-      scale.value = 0.8;
-      ringScale.value = 0.5;
-      ringOpacity.value = 0;
-    }
-  }, [isActive]);
-
-  const centerStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: scale.value }]
-  }));
-
-  const ringStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: ringScale.value }],
-    opacity: ringOpacity.value,
-  }));
-
-  return (
-    <View style={styles.visualContainer}>
-      <Svg style={StyleSheet.absoluteFill} width="100%" height="100%">
-        <Defs>
-          <SvgRadialGradient id="glow1" cx="50%" cy="50%" r="50%">
-            <Stop offset="0%" stopColor="#3B82F6" stopOpacity="0.15" />
-            <Stop offset="100%" stopColor="#3B82F6" stopOpacity="0" />
-          </SvgRadialGradient>
-        </Defs>
-        <Circle cx="50%" cy="50%" r="120" fill="url(#glow1)" />
-        <Path d="M40 80 Q 150 50 200 120 T 320 180" stroke="rgba(255,255,255,0.05)" strokeWidth="1" fill="none" />
-      </Svg>
-      
-      <Animated.View style={[styles.ring, { borderColor: theme.colors.primary }, ringStyle]} />
-      
-      <Animated.View style={[styles.centerNode, centerStyle]}>
-        <LinearGradient
-          colors={theme.gradients.primary.colors}
-          style={styles.centerNodeGradient}
-          start={theme.gradients.primary.start}
-          end={theme.gradients.primary.end}
-        >
-          <User color="#FFF" size={24} />
-        </LinearGradient>
-      </Animated.View>
-
-      <View style={[styles.floatingNode, { top: 40, left: 40, backgroundColor: theme.colors.surfaceElevated }]}>
-        <Wrench color={theme.colors.icon} size={16} />
-      </View>
-      <View style={[styles.floatingNode, { bottom: 60, right: 30, backgroundColor: theme.colors.surfaceElevated }]}>
-        <Zap color={theme.colors.icon} size={16} />
-      </View>
-      <View style={[styles.floatingNode, { top: 120, right: 20, backgroundColor: theme.colors.surfaceElevated }]}>
-        <ShieldCheck color={theme.colors.primary} size={16} />
-      </View>
-    </View>
-  );
-};
-
-// --- Screen 2 Visual: Compare ---
-const CompareVisual = ({ isActive, theme }) => {
-  const card1Y = useSharedValue(20);
-  const card2Y = useSharedValue(30);
-  const opacity = useSharedValue(0);
-
-  useEffect(() => {
-    if (isActive) {
-      opacity.value = withTiming(1, { duration: 500 });
-      card1Y.value = withSpring(0, { damping: 14 });
-      card2Y.value = withDelay(150, withSpring(0, { damping: 14 }));
-    } else {
-      opacity.value = 0;
-      card1Y.value = 20;
-      card2Y.value = 30;
-    }
-  }, [isActive]);
-
-  const card1Style = useAnimatedStyle(() => ({
-    opacity: opacity.value,
-    transform: [{ translateY: card1Y.value }, { scale: 0.9 }],
-  }));
-  const card2Style = useAnimatedStyle(() => ({
-    opacity: opacity.value,
-    transform: [{ translateY: card2Y.value }],
-  }));
-
-  return (
-    <View style={styles.visualContainer}>
-      <Svg style={StyleSheet.absoluteFill} width="100%" height="100%">
-        <Defs>
-          <SvgRadialGradient id="glow2" cx="50%" cy="50%" r="50%">
-            <Stop offset="0%" stopColor="#8B5CF6" stopOpacity="0.1" />
-            <Stop offset="100%" stopColor="#8B5CF6" stopOpacity="0" />
-          </SvgRadialGradient>
-        </Defs>
-        <Circle cx="50%" cy="50%" r="120" fill="url(#glow2)" />
-      </Svg>
-
-      <Animated.View style={[styles.previewCard, { backgroundColor: theme.colors.surfaceElevated, top: -20 }, card1Style]}>
-        <View style={styles.cardRow}>
-          <Typography variant="bodyMedium" color="text">Auto Masters</Typography>
-          <View style={styles.ratingBadge}>
-            <Star size={12} color={theme.colors.warning} fill={theme.colors.warning} />
-            <Typography variant="caption" style={{marginLeft: 4}}>4.6</Typography>
-          </View>
-        </View>
-        <Typography variant="caption" color="textMuted">2.4 km away</Typography>
-      </Animated.View>
-
-      <Animated.View style={[styles.previewCard, { backgroundColor: theme.colors.surface, borderColor: theme.colors.primary, borderWidth: 1, shadowColor: theme.colors.primary, shadowOpacity: 0.1, shadowRadius: 10 }, card2Style]}>
-        <View style={styles.cardRow}>
-          <Typography variant="title" color="text">QuickFix Garage</Typography>
-          <View style={styles.ratingBadge}>
-            <Star size={12} color={theme.colors.warning} fill={theme.colors.warning} />
-            <Typography variant="caption" style={{marginLeft: 4, fontWeight: '700'}}>4.9</Typography>
-          </View>
-        </View>
-        
-        <View style={[styles.cardRow, { marginTop: 12 }]}>
-          <Typography variant="caption" color="textSecondary">1.2 km away</Typography>
-          <View style={{flexDirection: 'row', alignItems: 'center'}}>
-            <View style={{width: 6, height: 6, borderRadius: 3, backgroundColor: theme.colors.success, marginRight: 4}} />
-            <Typography variant="caption" color="success">Available</Typography>
-          </View>
-        </View>
-        
-        <View style={{position: 'absolute', top: -10, right: -10, backgroundColor: theme.colors.surface, borderRadius: 10}}>
-          <ShieldCheck color={theme.colors.primary} size={20} />
-        </View>
-      </Animated.View>
-    </View>
-  );
-};
-
-// --- Screen 3 Visual: Connect ---
-const ConnectVisual = ({ isActive, theme }) => {
-  const lineProgress = useSharedValue(0);
-  const iconOpacity = useSharedValue(0);
-
-  useEffect(() => {
-    if (isActive) {
-      lineProgress.value = withTiming(1, { duration: 600, easing: Easing.bezier(0.25, 0.1, 0.25, 1) });
-      iconOpacity.value = withDelay(400, withTiming(1, { duration: 400 }));
-    } else {
-      lineProgress.value = 0;
-      iconOpacity.value = 0;
-    }
-  }, [isActive]);
-
-  const lineStyle = useAnimatedStyle(() => ({
-    width: `${lineProgress.value * 100}%`,
-  }));
-
-  const iconStyle = useAnimatedStyle(() => ({
-    opacity: iconOpacity.value,
-    transform: [{ scale: interpolate(iconOpacity.value, [0, 1], [0.8, 1]) }],
-  }));
-
-  return (
-    <View style={styles.visualContainer}>
-      <Svg style={StyleSheet.absoluteFill} width="100%" height="100%">
-        <Defs>
-          <SvgRadialGradient id="glow3" cx="50%" cy="50%" r="50%">
-            <Stop offset="0%" stopColor="#22D3EE" stopOpacity="0.08" />
-            <Stop offset="100%" stopColor="#22D3EE" stopOpacity="0" />
-          </SvgRadialGradient>
-        </Defs>
-        <Circle cx="50%" cy="50%" r="120" fill="url(#glow3)" />
-      </Svg>
-
-      <View style={styles.connectRow}>
-        <View style={[styles.connectNode, { backgroundColor: theme.colors.surfaceElevated }]}>
-          <User color={theme.colors.text} size={20} />
-        </View>
-
-        <View style={styles.connectLineContainer}>
-          <View style={[styles.connectLineBg, { backgroundColor: theme.colors.surfaceSecondary }]} />
-          <Animated.View style={[styles.connectLineFill, lineStyle]}>
-            <LinearGradient
-              colors={theme.gradients.primary.colors}
-              start={{x: 0, y: 0}}
-              end={{x: 1, y: 0}}
-              style={StyleSheet.absoluteFillObject}
-            />
-          </Animated.View>
-        </View>
-
-        <View style={[styles.connectNode, { backgroundColor: theme.colors.surfaceElevated }]}>
-          <Wrench color={theme.colors.primary} size={20} />
-        </View>
-      </View>
-
-      <Animated.View style={[styles.floatingIcon, { top: 40, left: 60, backgroundColor: theme.colors.surface }, iconStyle]}>
-        <MessageSquare color={theme.colors.icon} size={14} />
-      </Animated.View>
-      <Animated.View style={[styles.floatingIcon, { bottom: 60, right: 60, backgroundColor: theme.colors.surface }, iconStyle]}>
-        <Phone color={theme.colors.icon} size={14} />
-      </Animated.View>
-    </View>
-  );
-};
-
-// --- Data ---
-const slides = [
+const screens = [
   {
     id: '1',
-    headline: 'Find trusted help nearby.',
-    description: 'Discover reliable local professionals based on your location, ratings and availability.',
-    Visual: DiscoverVisual,
+    title: 'Easy Process',
+    description:
+      'Find all your house needs in one place. We provide every service to make your home experience smooth.',
+    heroColors: ['#BA75F0', '#8C68E8', '#7A67E0'],
+    cta: 'Next',
   },
   {
     id: '2',
-    headline: 'Choose with confidence.',
-    description: 'Compare services, ratings, reviews and availability before you connect.',
-    Visual: CompareVisual,
+    title: 'Fast Transportation',
+    description:
+      'We provide the best transportation service and organize your furniture properly to prevent any damage.',
+    heroColors: ['#67B8EC', '#42A2E2', '#3897DB'],
+    cta: 'Next',
   },
   {
     id: '3',
-    headline: 'Help is just a tap away.',
-    description: 'Connect with trusted local professionals whenever you need them.',
-    Visual: ConnectVisual,
+    title: 'Expert People',
+    description:
+      'We have the best in class individuals working just for you. They are well trained and capable of handling anything you need.',
+    heroColors: ['#FFB05A', '#FF8E2D', '#FF6A00'],
+    cta: 'Get Started',
   },
 ];
 
-// --- Main Component ---
+const SkipPill = ({ theme, onPress, topInset }) => (
+  <TouchableOpacity
+    onPress={onPress}
+    activeOpacity={0.85}
+    style={[styles.skipPill, { backgroundColor: 'rgba(255,255,255,0.12)', top: Math.max((topInset || 0) + 16, 44) }]}
+  >
+    <Typography variant="p3" weight="bold" style={{ color: theme.colors.white }}>
+      Skip
+    </Typography>
+  </TouchableOpacity>
+);
+
+const HeroDots = () => (
+  <View style={styles.heroDotLayer}>
+    <View style={[styles.heroDot, styles.heroDotOne]} />
+    <View style={[styles.heroDot, styles.heroDotTwo]} />
+    <View style={[styles.heroDot, styles.heroDotThree]} />
+    <View style={[styles.heroDot, styles.heroDotFour]} />
+    <View style={[styles.heroDot, styles.heroDotFive]} />
+  </View>
+);
+
+const Pagination = ({ currentIndex, theme, onDotPress }) => (
+  <View style={styles.pagination}>
+    {screens.map((screen, index) => {
+      const isActive = index === currentIndex;
+      return (
+        <TouchableOpacity
+          key={screen.id}
+          onPress={() => onDotPress(index)}
+          activeOpacity={0.8}
+          style={[
+            styles.paginationDot,
+            {
+              width: isActive ? 24 : 8,
+              backgroundColor: isActive ? theme.colors.primary : theme.colors.grey[400],
+            },
+          ]}
+        />
+      );
+    })}
+  </View>
+);
+
+const ScreenOneIllustration = ({ theme }) => {
+  return (
+    <View style={styles.illustrationWrap}>
+      <View style={[styles.glowOrb, styles.glowOrbLarge, { backgroundColor: 'rgba(255,255,255,0.10)' }]} />
+      <View style={[styles.glowOrb, styles.glowOrbSmall, { backgroundColor: 'rgba(255,255,255,0.12)' }]} />
+      <View style={[styles.houseBadge, { backgroundColor: 'rgba(255,255,255,0.12)' }]}>
+        <View style={[styles.houseBadgeInner, { backgroundColor: 'rgba(255,255,255,0.10)' }]}>
+          <LinearGradient
+            colors={[theme.colors.accentPurple, theme.colors.primary]}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+            style={styles.houseIconCard}
+          >
+            <Home size={20} color={theme.colors.white} fill={theme.colors.white} />
+          </LinearGradient>
+        </View>
+      </View>
+      <View style={[styles.treeBadge, { backgroundColor: 'rgba(255,255,255,0.12)' }]}>
+        <TreePine size={18} color="#2F8F54" fill="#2F8F54" />
+      </View>
+
+      <View style={styles.boxScene}>
+        <View style={[styles.shadowBase, { backgroundColor: 'rgba(74, 39, 144, 0.18)' }]} />
+        <View style={[styles.boxBackFlapLeft, { borderBottomColor: '#D98F46' }]} />
+        <View style={[styles.boxBackFlapRight, { borderBottomColor: '#E6A559' }]} />
+        <View style={[styles.boxBody, { backgroundColor: '#F4B16A' }]}>
+          <View style={[styles.boxCenterFold, { backgroundColor: '#E39B54' }]} />
+        </View>
+        <View style={[styles.boxFrontFlapLeft, { backgroundColor: '#F9D187' }]} />
+        <View style={[styles.boxFrontFlapRight, { backgroundColor: '#EDB56A' }]} />
+
+        <View style={styles.teddyHead}>
+          <View style={[styles.teddyEar, styles.teddyEarLeft]} />
+          <View style={[styles.teddyEar, styles.teddyEarRight]} />
+          <View style={styles.teddyFace}>
+            <View style={styles.teddyEyeRow}>
+              <View style={styles.teddyEye} />
+              <View style={styles.teddyEye} />
+            </View>
+            <View style={styles.teddyNose} />
+          </View>
+        </View>
+
+        <View style={[styles.lampShade, { backgroundColor: theme.colors.white }]} />
+        <View style={[styles.lampStem, { backgroundColor: '#A9A9B8' }]} />
+        <View style={[styles.lampBase, { backgroundColor: '#3E5C92' }]} />
+
+        <View style={[styles.photoFrame, { backgroundColor: '#F4C44F' }]}>
+          <View style={[styles.photoInner, { backgroundColor: '#8DD7F7' }]} />
+        </View>
+
+        <View style={styles.plantGroup}>
+          <View style={[styles.pot, { backgroundColor: '#C97545' }]} />
+          <View style={[styles.leaf, styles.leafOne, { backgroundColor: '#7DBE45' }]} />
+          <View style={[styles.leaf, styles.leafTwo, { backgroundColor: '#9ACD5A' }]} />
+          <View style={[styles.leaf, styles.leafThree, { backgroundColor: '#78B448' }]} />
+        </View>
+
+        <View style={styles.bookStack}>
+          <View style={[styles.book, { backgroundColor: '#F7D38F' }]} />
+          <View style={[styles.book, { backgroundColor: '#79C0D8' }]} />
+          <View style={[styles.book, { backgroundColor: '#E7A85F' }]} />
+        </View>
+
+        <View style={styles.ball}>
+          <Circle size={28} color="#FFFFFF" fill="#FFFFFF" />
+          <View style={[styles.ballPatch, styles.ballPatchOne]} />
+          <View style={[styles.ballPatch, styles.ballPatchTwo]} />
+        </View>
+      </View>
+    </View>
+  );
+};
+
+const ScreenTwoIllustration = () => {
+  return (
+    <View style={styles.illustrationWrap}>
+      <View style={[styles.blueGlowLarge, { backgroundColor: 'rgba(255,255,255,0.11)' }]} />
+      <View style={[styles.blueGlowMedium, { backgroundColor: 'rgba(255,255,255,0.08)' }]} />
+
+      <View style={[styles.emojiBubble, styles.emojiBubbleLeft, { backgroundColor: 'rgba(255,255,255,0.16)' }]}>
+        <Heart size={16} color="#FF584F" fill="#FF584F" />
+      </View>
+      <View style={[styles.emojiBubble, styles.emojiBubbleTopRight, { backgroundColor: 'rgba(255,255,255,0.16)' }]}>
+        <View style={styles.avatarFace}>
+          <View style={styles.avatarHair} />
+          <View style={styles.avatarBeard} />
+          <View style={styles.avatarThumbWrap}>
+            <ThumbsUp size={13} color="#F7B348" fill="#F7B348" />
+          </View>
+        </View>
+      </View>
+      <View style={[styles.emojiBubble, styles.emojiBubbleBottom, { backgroundColor: 'rgba(255,255,255,0.16)' }]}>
+        <CarFront size={16} color="#2091F1" />
+      </View>
+
+      <View style={styles.truckScene}>
+        <View style={[styles.truckShadow, { backgroundColor: 'rgba(26, 86, 130, 0.18)' }]} />
+
+        <View style={styles.worker}>
+          <View style={[styles.workerHead, { backgroundColor: '#F2B28F' }]} />
+          <View style={[styles.workerCap, { backgroundColor: '#FF5F22' }]} />
+          <View style={[styles.workerTorso, { backgroundColor: '#FF6A00' }]} />
+          <View style={[styles.workerVestStripe, styles.workerVestStripeLeft]} />
+          <View style={[styles.workerVestStripe, styles.workerVestStripeRight]} />
+          <View style={[styles.workerArm, styles.workerArmLeft, { backgroundColor: '#F2B28F' }]} />
+          <View style={[styles.workerArm, styles.workerArmRight, { backgroundColor: '#F2B28F' }]} />
+          <View style={[styles.workerLeg, styles.workerLegLeft, { backgroundColor: '#436CA8' }]} />
+          <View style={[styles.workerLeg, styles.workerLegRight, { backgroundColor: '#2D4E7D' }]} />
+        </View>
+
+        <View style={styles.truckWrap}>
+          <View style={[styles.truckCargo, { backgroundColor: '#3D4148' }]}>
+            <View style={[styles.cargoDoorTop, { backgroundColor: '#CFD1D4' }]} />
+            <View style={[styles.cargoDoorLine, styles.cargoDoorLineOne]} />
+            <View style={[styles.cargoDoorLine, styles.cargoDoorLineTwo]} />
+            <View style={[styles.cargoDoorLine, styles.cargoDoorLineThree]} />
+            <View style={[styles.cargoBox, styles.cargoBoxOne, { backgroundColor: '#E7C59A' }]} />
+            <View style={[styles.cargoBox, styles.cargoBoxTwo, { backgroundColor: '#CFB18B' }]} />
+            <View style={[styles.cargoBox, styles.cargoBoxThree, { backgroundColor: '#E0C097' }]} />
+          </View>
+          <View style={[styles.truckCab, { backgroundColor: '#191C21' }]}>
+            <View style={[styles.truckWindow, { backgroundColor: '#D5F0F5' }]} />
+            <View style={[styles.windowShine, { backgroundColor: 'rgba(255,255,255,0.35)' }]} />
+            <View style={[styles.truckBumper, { backgroundColor: '#252A32' }]} />
+            <View style={[styles.truckMirror, { backgroundColor: '#DCE4EA' }]} />
+          </View>
+          <View style={[styles.truckConnector, { backgroundColor: '#1E2229' }]} />
+          <View style={[styles.truckLight, styles.truckLightRear, { backgroundColor: '#FF8B4A' }]} />
+          <View style={[styles.truckLight, styles.truckLightFront, { backgroundColor: '#FF8B4A' }]} />
+          <View style={[styles.wheel, styles.wheelBack]}>
+            <View style={styles.wheelInner} />
+          </View>
+          <View style={[styles.wheel, styles.wheelMid]}>
+            <View style={styles.wheelInner} />
+          </View>
+          <View style={[styles.wheel, styles.wheelFront]}>
+            <View style={styles.wheelInner} />
+          </View>
+        </View>
+      </View>
+    </View>
+  );
+};
+
+const ScreenThreeIllustration = ({ theme }) => {
+  return (
+    <View style={styles.illustrationWrap}>
+      <View style={[styles.orangeGlowLarge, { backgroundColor: 'rgba(255,255,255,0.10)' }]} />
+      <View style={[styles.orangeGlowMedium, { backgroundColor: 'rgba(255,255,255,0.10)' }]} />
+      <View style={[styles.emptyFeatureSpace, { borderColor: 'rgba(255,255,255,0.18)' }]}>
+        <View style={[styles.emptyFeatureInner, { backgroundColor: 'rgba(255,255,255,0.08)' }]} />
+      </View>
+    </View>
+  );
+};
+
+const renderIllustration = (index, theme) => {
+  if (index === 0) return <ScreenOneIllustration theme={theme} />;
+  if (index === 1) return <ScreenTwoIllustration />;
+  return <ScreenThreeIllustration theme={theme} />;
+};
+
 export default function OnboardingScreen() {
   const { theme } = useAppTheme();
   const router = useRouter();
   const insets = useSafeAreaInsets();
-  
   const [currentIndex, setCurrentIndex] = useState(0);
-  const activeIndex = useSharedValue(0);
-  const flatListRef = useRef(null);
 
-  const onScroll = (e) => {
-    const slideIndex = e.nativeEvent.contentOffset.x / width;
-    activeIndex.value = slideIndex;
-    setCurrentIndex(Math.round(slideIndex));
-  };
-
-  const completeOnboarding = async () => {
-    try {
-      await AsyncStorage.setItem('onboarding_completed', 'true');
-      // Proceed to the normal authentication flow
-      router.replace('/(auth)/login');
-    } catch (error) {
-      console.error('Error saving onboarding state:', error);
-      router.replace('/(auth)/login');
-    }
-  };
+  const current = screens[currentIndex];
 
   const handleNext = () => {
-    if (currentIndex < slides.length - 1) {
-      flatListRef.current?.scrollToIndex({ index: currentIndex + 1, animated: true });
-    } else {
-      completeOnboarding();
+    if (currentIndex < screens.length - 1) {
+      setCurrentIndex((prev) => prev + 1);
+      return;
     }
+
+    router.replace('/(auth)/login');
   };
 
   const handleSkip = () => {
-    completeOnboarding();
-  };
-
-  const renderSegment = (index) => {
-    const isActive = currentIndex === index;
-    const isCompleted = currentIndex > index;
-    
-    let backgroundColor = theme.colors.surfaceSecondary;
-    if (isCompleted) backgroundColor = 'rgba(99,102,241,0.5)'; // Subtle indigo
-    
-    return (
-      <View key={index} style={[styles.segment, { backgroundColor }]}>
-        {isActive && (
-          <LinearGradient
-            colors={theme.gradients.primary.colors}
-            start={{x: 0, y: 0}}
-            end={{x: 1, y: 0}}
-            style={StyleSheet.absoluteFillObject}
-          />
-        )}
-      </View>
-    );
+    router.replace('/(auth)/login');
   };
 
   return (
-    <View
-      style={styles.container}
-    >
-      {/* Top Bar with Skip */}
-      <View style={[styles.topBar, { top: insets.top + 16 }]}>
-        {currentIndex < 2 ? (
-          <TouchableOpacity onPress={handleSkip} style={styles.skipButton}>
-            <Typography variant="bodyMedium" style={{color: '#64748B'}}>Skip</Typography>
-          </TouchableOpacity>
-        ) : <View style={styles.skipButton} />}
-      </View>
-
-      <FlatList
-        ref={flatListRef}
-        data={slides}
-        horizontal
-        pagingEnabled
-        showsHorizontalScrollIndicator={false}
-        onScroll={onScroll}
-        scrollEventThrottle={16}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item, index }) => (
-          <View style={[styles.slide, { width }]}>
-            <View style={styles.visualArea}>
-              <item.Visual isActive={currentIndex === index} theme={theme} />
-            </View>
-            <View style={styles.textArea}>
-              <Typography variant="h1" weight="bold" style={[styles.headline, {color: '#0F172A'}]}>
-                {item.headline}
-              </Typography>
-              <Typography variant="bodyMedium" style={[styles.description, {color: '#64748B'}]}>
-                {item.description}
-              </Typography>
-            </View>
-          </View>
-        )}
-      />
-
-      {/* Bottom Area: Progress & CTA */}
-      <View style={[styles.bottomArea, { paddingBottom: Math.max(insets.bottom + 24, 24) }]}>
-        <View style={styles.progressContainer}>
-          {slides.map((_, index) => renderSegment(index))}
+    <View style={[styles.screen, { paddingBottom: insets.bottom }]}>
+      <StatusBar style="light" backgroundColor={theme.colors.primary} />
+      <View style={{ position: 'absolute', top: 0, left: 0, right: 0, height: insets.top, backgroundColor: theme.colors.primary, zIndex: 10 }} />
+      <View style={[styles.singleScreen, { marginTop: insets.top }]}>
+        <View style={styles.topVisualSection}>
+          <LinearGradient
+            colors={current.heroColors}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+            style={[styles.heroCard, { height: height * 0.45 }]}
+          >
+            <HeroDots />
+            <SkipPill theme={theme} onPress={handleSkip} topInset={insets.top} />
+            <Animated.View key={`img-${current.id}`} entering={FadeIn.duration(400)} style={{ flex: 1 }}>
+              {renderIllustration(currentIndex, theme)}
+            </Animated.View>
+          </LinearGradient>
         </View>
 
-        <Button
-          title={currentIndex === 2 ? 'Get Started' : 'Continue'}
-          onPress={handleNext}
-          fullWidth
-          variant="primary"
-          style={styles.ctaButton}
-        />
+        <View style={styles.contentSection}>
+          <Animated.View key={`text-${current.id}`} entering={FadeInRight.duration(400)} style={styles.textContent}>
+            <Typography variant="h1" weight="bold" align="center" style={[styles.title, { fontSize: 28 }]}>
+              {current.title}
+            </Typography>
+            <Typography variant="p2" align="center" style={[styles.description, { color: '#8D8D95', fontSize: 15, lineHeight: 24 }]}>
+              {current.description}
+            </Typography>
+          </Animated.View>
+
+          <View style={styles.bottomControls}>
+            <Pagination currentIndex={currentIndex} theme={theme} onDotPress={setCurrentIndex} />
+
+            <Button
+              title={current.cta}
+              onPress={handleNext}
+              fullWidth
+              size="large"
+              style={styles.ctaButton}
+            />
+          </View>
+        </View>
       </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  screen: {
     flex: 1,
+    backgroundColor: '#FFFFFF',
   },
-  topBar: {
-    position: 'absolute',
-    right: 20,
-    zIndex: 10,
-  },
-  skipButton: {
-    padding: 8,
-    minWidth: 44,
-    minHeight: 44,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  slide: {
+  singleScreen: {
     flex: 1,
-    paddingHorizontal: 24,
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: '#FFFFFF',
   },
-  visualArea: {
-    width: '100%',
-    height: 280,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 40,
+  topVisualSection: {
   },
-  textArea: {
-    width: '100%',
-    alignItems: 'flex-start',
-  },
-  headline: {
-    marginBottom: 12,
-  },
-  description: {
-    lineHeight: 24,
-  },
-  bottomArea: {
-    paddingHorizontal: 24,
-    width: '100%',
-  },
-  progressContainer: {
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-    marginBottom: 32,
-    gap: 8,
-  },
-  segment: {
-    height: 4,
-    width: 32,
-    borderRadius: 2,
+  heroCard: {
+    borderBottomLeftRadius: 40,
+    borderBottomRightRadius: 40,
     overflow: 'hidden',
+    position: 'relative',
   },
-  ctaButton: {
-    width: '100%',
+  heroDotLayer: {
+    ...StyleSheet.absoluteFillObject,
   },
-
-  // Visual Components Specific Styles
-  visualContainer: {
-    width: 240,
-    height: 240,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  // Screen 1
-  centerNode: {
-    width: 56,
-    height: 56,
-    borderRadius: 28,
-    backgroundColor: 'rgba(59,130,246,0.2)',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  centerNodeGradient: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  ring: {
+  heroDot: {
     position: 'absolute',
-    width: 140,
-    height: 140,
-    borderRadius: 70,
-    borderWidth: 1,
+    width: 10,
+    height: 10,
+    borderRadius: 999,
+    backgroundColor: 'rgba(255,255,255,0.12)',
   },
-  floatingNode: {
+  heroDotOne: { top: 92, left: 28 },
+  heroDotTwo: { top: 40, left: 92 },
+  heroDotThree: { top: 66, right: 84 },
+  heroDotFour: { top: 142, right: 30 },
+  heroDotFive: { bottom: 32, right: 72, width: 22, height: 22, backgroundColor: 'rgba(255,255,255,0.10)' },
+  skipPill: {
     position: 'absolute',
-    width: 36,
-    height: 36,
+    right: 22,
+    zIndex: 3,
+    paddingHorizontal: 18,
+    paddingVertical: 10,
+    borderRadius: 999,
+  },
+  illustrationWrap: {
+    flex: 1,
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    paddingBottom: 36,
+  },
+  glowOrb: {
+    position: 'absolute',
+    borderRadius: 999,
+  },
+  glowOrbLarge: {
+    width: 180,
+    height: 180,
+    bottom: 58,
+    left: 40,
+  },
+  glowOrbSmall: {
+    width: 64,
+    height: 64,
+    top: 74,
+    right: 56,
+  },
+  houseBadge: {
+    position: 'absolute',
+    top: 76,
+    right: 56,
+    width: 74,
+    height: 74,
+    borderRadius: 999,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  houseBadgeInner: {
+    width: 54,
+    height: 54,
     borderRadius: 18,
     alignItems: 'center',
     justifyContent: 'center',
-    shadowColor: '#000',
-    shadowOpacity: 0.2,
-    shadowRadius: 8,
-    elevation: 4,
   },
-  // Screen 2
-  previewCard: {
-    width: 200,
-    padding: 16,
-    borderRadius: 16,
+  houseIconCard: {
+    width: 42,
+    height: 42,
+    borderRadius: 14,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  treeBadge: {
     position: 'absolute',
-  },
-  cardRow: {
-    flexDirection: 'row',
+    left: 32,
+    bottom: 48,
+    width: 64,
+    height: 64,
+    borderRadius: 999,
     alignItems: 'center',
-    justifyContent: 'space-between',
+    justifyContent: 'center',
   },
-  ratingBadge: {
+  boxScene: {
+    width: 260,
+    height: 220,
+    position: 'relative',
+    justifyContent: 'flex-end',
+  },
+  shadowBase: {
+    position: 'absolute',
+    bottom: 8,
+    left: 16,
+    right: 8,
+    height: 14,
+    borderRadius: 999,
+  },
+  boxBackFlapLeft: {
+    position: 'absolute',
+    left: 58,
+    bottom: 92,
+    width: 0,
+    height: 0,
+    borderLeftWidth: 8,
+    borderRightWidth: 58,
+    borderBottomWidth: 58,
+    borderLeftColor: 'transparent',
+    borderRightColor: 'transparent',
+  },
+  boxBackFlapRight: {
+    position: 'absolute',
+    right: 38,
+    bottom: 102,
+    width: 0,
+    height: 0,
+    borderLeftWidth: 54,
+    borderRightWidth: 8,
+    borderBottomWidth: 46,
+    borderLeftColor: 'transparent',
+    borderRightColor: 'transparent',
+  },
+  boxBody: {
+    position: 'absolute',
+    left: 62,
+    right: 56,
+    bottom: 30,
+    height: 106,
+    borderRadius: 8,
+  },
+  boxCenterFold: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: '48%',
+    width: 4,
+  },
+  boxFrontFlapLeft: {
+    position: 'absolute',
+    left: 28,
+    bottom: 58,
+    width: 74,
+    height: 36,
+    transform: [{ skewX: '-18deg' }],
+  },
+  boxFrontFlapRight: {
+    position: 'absolute',
+    left: 114,
+    bottom: 58,
+    width: 92,
+    height: 42,
+    transform: [{ skewX: '18deg' }],
+  },
+  teddyHead: {
+    position: 'absolute',
+    top: 26,
+    left: 106,
+    width: 44,
+    height: 44,
+  },
+  teddyEar: {
+    position: 'absolute',
+    width: 14,
+    height: 14,
+    borderRadius: 999,
+    backgroundColor: '#9B5A1F',
+    top: 0,
+  },
+  teddyEarLeft: { left: 2 },
+  teddyEarRight: { right: 2 },
+  teddyFace: {
+    position: 'absolute',
+    bottom: 0,
+    left: 4,
+    right: 4,
+    height: 34,
+    borderRadius: 16,
+    backgroundColor: '#B56A2D',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  teddyEyeRow: {
     flexDirection: 'row',
+    gap: 8,
+    marginBottom: 4,
+  },
+  teddyEye: {
+    width: 4,
+    height: 4,
+    borderRadius: 999,
+    backgroundColor: '#1A1A1A',
+  },
+  teddyNose: {
+    width: 8,
+    height: 6,
+    borderRadius: 999,
+    backgroundColor: '#3E2A1C',
+  },
+  lampShade: {
+    position: 'absolute',
+    left: 90,
+    top: 60,
+    width: 34,
+    height: 28,
+    borderTopLeftRadius: 4,
+    borderTopRightRadius: 4,
+    borderBottomWidth: 10,
+    borderBottomColor: '#E8E8ED',
+  },
+  lampStem: {
+    position: 'absolute',
+    left: 105,
+    top: 88,
+    width: 4,
+    height: 28,
+    borderRadius: 2,
+  },
+  lampBase: {
+    position: 'absolute',
+    left: 94,
+    top: 110,
+    width: 24,
+    height: 14,
+    borderRadius: 10,
+  },
+  photoFrame: {
+    position: 'absolute',
+    left: 58,
+    top: 106,
+    width: 30,
+    height: 42,
+    borderRadius: 4,
+    padding: 4,
+    transform: [{ rotate: '8deg' }],
+  },
+  photoInner: {
+    flex: 1,
+    borderRadius: 2,
+  },
+  plantGroup: {
+    position: 'absolute',
+    right: 62,
+    top: 114,
+    width: 38,
+    height: 54,
     alignItems: 'center',
   },
-  // Screen 3
-  connectRow: {
-    flexDirection: 'row',
+  pot: {
+    position: 'absolute',
+    bottom: 0,
+    width: 24,
+    height: 18,
+    borderRadius: 4,
+  },
+  leaf: {
+    position: 'absolute',
+    width: 10,
+    borderRadius: 10,
+  },
+  leafOne: {
+    height: 34,
+    left: 6,
+    top: 0,
+    transform: [{ rotate: '-24deg' }],
+  },
+  leafTwo: {
+    height: 30,
+    left: 14,
+    top: 2,
+    transform: [{ rotate: '14deg' }],
+  },
+  leafThree: {
+    height: 28,
+    right: 5,
+    top: 6,
+    transform: [{ rotate: '34deg' }],
+  },
+  bookStack: {
+    position: 'absolute',
+    right: 28,
+    top: 118,
+    gap: 3,
+  },
+  book: {
+    width: 40,
+    height: 8,
+    borderRadius: 3,
+  },
+  ball: {
+    position: 'absolute',
+    bottom: 16,
+    left: 152,
+    width: 28,
+    height: 28,
+    borderRadius: 999,
+    backgroundColor: '#FFFFFF',
     alignItems: 'center',
-    width: '100%',
+    justifyContent: 'center',
+  },
+  ballPatch: {
+    position: 'absolute',
+    width: 8,
+    height: 8,
+    borderRadius: 2,
+    backgroundColor: '#1A1A1A',
+  },
+  ballPatchOne: {
+    top: 5,
+    left: 10,
+  },
+  ballPatchTwo: {
+    bottom: 5,
+    right: 6,
+  },
+  blueGlowLarge: {
+    position: 'absolute',
+    width: 190,
+    height: 190,
+    borderRadius: 999,
+    bottom: 52,
+    left: 56,
+  },
+  blueGlowMedium: {
+    position: 'absolute',
+    width: 72,
+    height: 72,
+    borderRadius: 999,
+    top: 72,
+    right: 56,
+  },
+  emojiBubble: {
+    position: 'absolute',
+    width: 58,
+    height: 58,
+    borderRadius: 999,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  emojiBubbleLeft: {
+    top: 80,
+    left: 42,
+  },
+  emojiBubbleTopRight: {
+    top: 84,
+    right: 52,
+    width: 70,
+    height: 70,
+  },
+  emojiBubbleBottom: {
+    bottom: 42,
+    left: 76,
+  },
+  avatarFace: {
+    width: 34,
+    height: 34,
+    borderRadius: 999,
+    backgroundColor: '#F1C29A',
+    alignItems: 'center',
+    justifyContent: 'center',
+    position: 'relative',
+  },
+  avatarHair: {
+    position: 'absolute',
+    top: 1,
+    left: 5,
+    right: 5,
+    height: 10,
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
+    backgroundColor: '#2D2A2A',
+  },
+  avatarBeard: {
+    position: 'absolute',
+    bottom: 5,
+    left: 8,
+    right: 8,
+    height: 8,
+    borderRadius: 8,
+    backgroundColor: '#54433D',
+  },
+  avatarThumbWrap: {
+    position: 'absolute',
+    right: -10,
+    top: 12,
+  },
+  truckScene: {
+    width: 270,
+    height: 220,
+    justifyContent: 'flex-end',
+    position: 'relative',
+  },
+  truckShadow: {
+    position: 'absolute',
+    left: 12,
+    right: 6,
+    bottom: 20,
+    height: 12,
+    borderRadius: 999,
+  },
+  worker: {
+    position: 'absolute',
+    left: 20,
+    bottom: 34,
+    width: 54,
+    height: 92,
+  },
+  workerHead: {
+    position: 'absolute',
+    top: 0,
+    left: 14,
+    width: 18,
+    height: 18,
+    borderRadius: 999,
+  },
+  workerCap: {
+    position: 'absolute',
+    top: 1,
+    left: 10,
+    width: 20,
+    height: 10,
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
+  },
+  workerTorso: {
+    position: 'absolute',
+    top: 18,
+    left: 11,
+    width: 26,
+    height: 34,
+    borderRadius: 8,
+  },
+  workerVestStripe: {
+    position: 'absolute',
+    top: 20,
+    width: 4,
+    height: 28,
+    backgroundColor: '#7AD8FF',
+  },
+  workerVestStripeLeft: {
+    left: 18,
+  },
+  workerVestStripeRight: {
+    left: 28,
+  },
+  workerArm: {
+    position: 'absolute',
+    top: 28,
+    width: 10,
+    height: 26,
+    borderRadius: 8,
+  },
+  workerArmLeft: {
+    left: 4,
+    transform: [{ rotate: '20deg' }],
+  },
+  workerArmRight: {
+    right: 2,
+    transform: [{ rotate: '-42deg' }],
+  },
+  workerLeg: {
+    position: 'absolute',
+    top: 50,
+    width: 10,
+    height: 34,
+    borderRadius: 8,
+  },
+  workerLegLeft: {
+    left: 16,
+    transform: [{ rotate: '4deg' }],
+  },
+  workerLegRight: {
+    left: 28,
+    transform: [{ rotate: '-4deg' }],
+  },
+  truckWrap: {
+    position: 'absolute',
+    right: 12,
+    bottom: 34,
+    width: 210,
+    height: 120,
+  },
+  truckCargo: {
+    position: 'absolute',
+    left: 0,
+    bottom: 20,
+    width: 120,
+    height: 90,
+    borderTopLeftRadius: 6,
+    borderTopRightRadius: 4,
+    borderBottomLeftRadius: 8,
+  },
+  cargoDoorTop: {
+    position: 'absolute',
+    top: 4,
+    left: 4,
+    right: 4,
+    height: 26,
+    borderTopLeftRadius: 4,
+    borderTopRightRadius: 2,
+  },
+  cargoDoorLine: {
+    position: 'absolute',
+    left: 10,
+    right: 10,
+    height: 2,
+    backgroundColor: '#9A9DA2',
+  },
+  cargoDoorLineOne: { top: 12 },
+  cargoDoorLineTwo: { top: 18 },
+  cargoDoorLineThree: { top: 24 },
+  cargoBox: {
+    position: 'absolute',
+    borderRadius: 2,
+  },
+  cargoBoxOne: {
+    left: 16,
+    bottom: 14,
+    width: 20,
+    height: 16,
+  },
+  cargoBoxTwo: {
+    left: 36,
+    bottom: 14,
+    width: 18,
+    height: 24,
+  },
+  cargoBoxThree: {
+    left: 52,
+    bottom: 14,
+    width: 18,
+    height: 18,
+  },
+  truckCab: {
+    position: 'absolute',
+    right: 0,
+    bottom: 20,
+    width: 98,
+    height: 74,
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 14,
+    borderBottomLeftRadius: 12,
+    borderBottomRightRadius: 14,
+  },
+  truckWindow: {
+    position: 'absolute',
+    top: 16,
+    right: 18,
+    width: 26,
+    height: 22,
+    borderTopLeftRadius: 3,
+    borderTopRightRadius: 6,
+    borderBottomLeftRadius: 3,
+  },
+  windowShine: {
+    position: 'absolute',
+    top: 18,
+    right: 30,
+    width: 3,
+    height: 14,
+    borderRadius: 3,
+  },
+  truckBumper: {
+    position: 'absolute',
+    bottom: 8,
+    right: 4,
+    width: 18,
+    height: 10,
+    borderRadius: 6,
+  },
+  truckMirror: {
+    position: 'absolute',
+    top: 36,
+    right: 10,
+    width: 12,
+    height: 6,
+    borderRadius: 3,
+  },
+  truckConnector: {
+    position: 'absolute',
+    left: 112,
+    bottom: 34,
+    width: 18,
+    height: 10,
+    borderRadius: 8,
+  },
+  truckLight: {
+    position: 'absolute',
+    width: 4,
+    height: 12,
+    borderRadius: 2,
+    bottom: 26,
+  },
+  truckLightRear: {
+    left: 114,
+  },
+  truckLightFront: {
+    right: 0,
+  },
+  wheel: {
+    position: 'absolute',
+    width: 28,
+    height: 28,
+    borderRadius: 999,
+    backgroundColor: '#262B31',
+    bottom: 0,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  wheelBack: { left: 30 },
+  wheelMid: { left: 112 },
+  wheelFront: { right: 18 },
+  wheelInner: {
+    width: 11,
+    height: 11,
+    borderRadius: 999,
+    backgroundColor: '#9CA4AC',
+  },
+  orangeGlowLarge: {
+    position: 'absolute',
+    width: 170,
+    height: 170,
+    borderRadius: 999,
+    top: 92,
+    right: 34,
+  },
+  orangeGlowMedium: {
+    position: 'absolute',
+    width: 74,
+    height: 74,
+    borderRadius: 999,
+    top: 74,
+    left: 96,
+  },
+  emptyFeatureSpace: {
+    width: width - 96,
+    maxWidth: 238,
+    height: 182,
+    borderRadius: 26,
+    borderWidth: 1.5,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 8,
+  },
+  emptyFeatureInner: {
+    width: '82%',
+    height: '72%',
+    borderRadius: 20,
+  },
+  contentSection: {
+    flex: 1,
+    alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 20,
+    paddingTop: 32,
+    paddingBottom: 24,
+    backgroundColor: '#FFFFFF',
   },
-  connectNode: {
-    width: 56,
-    height: 56,
-    borderRadius: 28,
+  textContent: {
     alignItems: 'center',
-    justifyContent: 'center',
-    zIndex: 2,
-  },
-  connectLineContainer: {
-    flex: 1,
-    height: 2,
-    marginHorizontal: 12,
-    position: 'relative',
-    justifyContent: 'center',
-  },
-  connectLineBg: {
-    position: 'absolute',
     width: '100%',
-    height: '100%',
   },
-  connectLineFill: {
-    position: 'absolute',
-    height: '100%',
-    left: 0,
+  bottomControls: {
+    width: '100%',
+    alignItems: 'center',
   },
-  floatingIcon: {
-    position: 'absolute',
-    width: 32,
-    height: 32,
-    borderRadius: 16,
+  title: {
+    color: '#111111',
+    marginBottom: 18,
+  },
+  description: {
+    maxWidth: 340,
+  },
+  pagination: {
+    flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
+    gap: 6,
+    marginTop: 12,
+    marginBottom: 20,
+  },
+  paginationDot: {
+    height: 8,
+    borderRadius: 999,
+  },
+  ctaButton: {
+    borderRadius: 14,
+    paddingHorizontal: 22,
+    marginBottom: 6,
+    width: '100%',
   },
 });

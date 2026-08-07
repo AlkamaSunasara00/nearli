@@ -52,11 +52,11 @@ export const SmallProviderCard = ({
         </View>
 
         <View style={styles.ratingBox}>
-          <Star size={12} color="#F59E0B" fill="#F59E0B" />
-          <Typography variant="caption" weight="bold" style={styles.ratingText}>
+          <Star size={12} color={theme.colors.warning} fill={theme.colors.warning} />
+          <Typography variant="p3" weight="bold" style={styles.ratingText}>
             {garage.rating}
           </Typography>
-          <Typography variant="caption" color="textMuted" style={{ fontSize: 11 }}>
+          <Typography variant="p3" color="textMuted">
             ({garage.reviews})
           </Typography>
         </View>
@@ -97,7 +97,6 @@ const styles = StyleSheet.create({
   },
   name: {
     flexShrink: 1,
-    fontSize: 13,
   },
   verifiedIcon: {
     marginLeft: 4,
@@ -109,6 +108,5 @@ const styles = StyleSheet.create({
   ratingText: {
     marginLeft: 4,
     marginRight: 4,
-    fontSize: 11,
   },
 });

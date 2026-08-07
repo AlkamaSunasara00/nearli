@@ -1,13 +1,13 @@
 import React from 'react';
 import { View, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
-import { ChevronRight, LogOut, Moon, Sun, Monitor, Bell, Settings, Shield, User as UserIcon, Wrench, Star } from 'lucide-react-native';
+import { ChevronRight, LogOut, Bell, Shield, User as UserIcon } from 'lucide-react-native';
 import { useAppTheme } from '../../src/hooks/useAppTheme';
 import { useAuth } from '../../src/hooks/useAuth';
 import { Typography } from '../../src/components/ui/Typography';
 import { Avatar } from '../../src/components/ui/Avatar';
 
 export default function ProviderProfileScreen() {
-  const { theme, themeMode, setThemeMode } = useAppTheme();
+  const { theme } = useAppTheme();
   const { logout, user } = useAuth();
 
   const MenuItem = ({ icon, title, subtitle, onPress, showArrow = true, danger = false }) => (
@@ -44,18 +44,6 @@ export default function ProviderProfileScreen() {
     </View>
   );
 
-  const handleThemeToggle = () => {
-    if (themeMode === 'system') setThemeMode('light');
-    else if (themeMode === 'light') setThemeMode('dark');
-    else setThemeMode('system');
-  };
-
-  const getThemeIcon = () => {
-    if (themeMode === 'system') return (color) => <Monitor size={20} color={color} />;
-    if (themeMode === 'dark') return (color) => <Moon size={20} color={color} />;
-    return (color) => <Sun size={20} color={color} />;
-  };
-
   return (
     <View style={[styles.container, { backgroundColor: 'transparent' }]}>
       <ScrollView contentContainerStyle={styles.scrollContent}>
@@ -76,7 +64,6 @@ export default function ProviderProfileScreen() {
 
         <Section title="Preferences">
           <MenuItem icon={(color) => <Bell size={20} color={color} />} title="Notifications" />
-          <MenuItem icon={getThemeIcon()} title="Appearance" subtitle={themeMode} onPress={handleThemeToggle} showArrow={false} />
         </Section>
 
         <View style={styles.logoutSection}>

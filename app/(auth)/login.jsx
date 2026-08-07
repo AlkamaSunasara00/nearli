@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, KeyboardAvoidingView, Platform, ScrollView, TextInput, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, KeyboardAvoidingView, Platform, ScrollView, TextInput, TouchableOpacity, Keyboard } from 'react-native';
 import { useRouter } from 'expo-router';
-import { Smartphone, Car, ShieldCheck, X } from 'lucide-react-native';
+import { Smartphone, Car, ShieldCheck, ArrowLeft } from 'lucide-react-native';
 import Animated, { FadeInUp, FadeIn } from 'react-native-reanimated';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
+import { StatusBar } from 'expo-status-bar';
 import { useAppTheme } from '../../src/hooks/useAppTheme';
 import { Typography } from '../../src/components/ui/Typography';
 import { Button } from '../../src/components/ui/Button';
@@ -16,6 +17,14 @@ export default function LoginScreen() {
   const [isFocused, setIsFocused] = useState(false);
   const router = useRouter();
   const { theme } = useAppTheme();
+  const insets = useSafeAreaInsets();
+
+  React.useEffect(() => {
+    const digits = phone.replace(/\D/g, '');
+    if (digits.length === 10) {
+      Keyboard.dismiss();
+    }
+  }, [phone]);
 
   const handleContinue = async () => {
     setError('');
@@ -52,16 +61,20 @@ export default function LoginScreen() {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: 'transparent' }} edges={['top', 'bottom', 'left', 'right']}>
+      <StatusBar style="light" backgroundColor={theme.colors.primary} />
+      <View style={{ position: 'absolute', top: 0, left: 0, right: 0, height: insets.top, backgroundColor: theme.colors.primary, zIndex: 10 }} />
       <KeyboardAvoidingView
         style={[styles.container, { backgroundColor: 'transparent' }]}
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
       >
         <ScrollView contentContainerStyle={styles.scrollContent} keyboardShouldPersistTaps="handled">
-          {/* Header Close */}
+          {/* Header */}
           <View style={styles.headerBar}>
             <TouchableOpacity onPress={handleClose} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
-              <X size={24} color={theme.colors.textPrimary} />
+              <ArrowLeft size={24} color={theme.colors.textPrimary} />
             </TouchableOpacity>
+            <Typography variant="h3" weight="bold" style={styles.headerTitle}>Login</Typography>
+            <View style={{ width: 24 }} />
           </View>
 
         {/* Custom Premium Illustration */}
@@ -153,13 +166,17 @@ const styles = StyleSheet.create({
   scrollContent: {
     flexGrow: 1,
     paddingHorizontal: 24,
-    paddingTop: 60, // Safe area approx
+    paddingTop: 16,
     paddingBottom: 40,
   },
   headerBar: {
     flexDirection: 'row',
-    justifyContent: 'flex-end',
+    alignItems: 'center',
+    justifyContent: 'space-between',
     marginBottom: 24,
+  },
+  headerTitle: {
+    fontSize: 18,
   },
   illustrationContainer: {
     alignItems: 'center',

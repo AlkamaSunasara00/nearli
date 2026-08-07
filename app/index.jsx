@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, Dimensions } from 'react-native';
 import { useRouter } from 'expo-router';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useAuth } from '../src/hooks/useAuth';
 import { useAppTheme } from '../src/hooks/useAppTheme';
 import { Typography } from '../src/components/ui/Typography';
@@ -19,26 +18,26 @@ import { Wrench } from 'lucide-react-native';
 const { width, height } = Dimensions.get('window');
 
 // Abstract SVG Background (Subtle Map/Location Atmosphere)
-const LocationAtmosphere = () => (
+const LocationAtmosphere = ({ theme }) => (
   <View style={StyleSheet.absoluteFillObject} pointerEvents="none">
     <Svg width={width} height={height} opacity={0.06}>
       <Defs>
         <SvgRadialGradient id="glow" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
-          <Stop offset="0%" stopColor="#3B82F6" stopOpacity="1" />
-          <Stop offset="100%" stopColor="#0C1220" stopOpacity="0" />
+          <Stop offset="0%" stopColor={theme.colors.accentBlue} stopOpacity="1" />
+          <Stop offset="100%" stopColor={theme.colors.primarySoft} stopOpacity="0" />
         </SvgRadialGradient>
       </Defs>
       <Circle cx={width / 2} cy={height / 2} r={width * 0.8} fill="url(#glow)" />
       
       {/* Subtle Map Lines */}
-      <Path d={`M -50 ${height * 0.3} Q ${width * 0.5} ${height * 0.2} ${width + 50} ${height * 0.4}`} stroke="#FFFFFF" strokeWidth="1" opacity="0.3" fill="none" />
-      <Path d={`M -50 ${height * 0.6} Q ${width * 0.5} ${height * 0.7} ${width + 50} ${height * 0.5}`} stroke="#FFFFFF" strokeWidth="1" opacity="0.2" fill="none" />
-      <Path d={`M ${width * 0.3} -50 Q ${width * 0.4} ${height * 0.5} ${width * 0.2} ${height + 50}`} stroke="#FFFFFF" strokeWidth="1" opacity="0.15" fill="none" />
+      <Path d={`M -50 ${height * 0.3} Q ${width * 0.5} ${height * 0.2} ${width + 50} ${height * 0.4}`} stroke={theme.colors.white} strokeWidth="1" opacity="0.3" fill="none" />
+      <Path d={`M -50 ${height * 0.6} Q ${width * 0.5} ${height * 0.7} ${width + 50} ${height * 0.5}`} stroke={theme.colors.white} strokeWidth="1" opacity="0.2" fill="none" />
+      <Path d={`M ${width * 0.3} -50 Q ${width * 0.4} ${height * 0.5} ${width * 0.2} ${height + 50}`} stroke={theme.colors.white} strokeWidth="1" opacity="0.15" fill="none" />
       
       {/* Tiny Location Nodes */}
-      <Circle cx={width * 0.2} cy={height * 0.35} r={3} fill="#8B5CF6" opacity="0.6" />
-      <Circle cx={width * 0.8} cy={height * 0.65} r={4} fill="#3B82F6" opacity="0.5" />
-      <Circle cx={width * 0.6} cy={height * 0.2} r={2} fill="#22D3EE" opacity="0.4" />
+      <Circle cx={width * 0.2} cy={height * 0.35} r={3} fill={theme.colors.accentPurple} opacity="0.6" />
+      <Circle cx={width * 0.8} cy={height * 0.65} r={4} fill={theme.colors.accentBlue} opacity="0.5" />
+      <Circle cx={width * 0.6} cy={height * 0.2} r={2} fill={theme.colors.accentOrange} opacity="0.4" />
     </Svg>
   </View>
 );
@@ -69,14 +68,6 @@ export default function IndexScreen() {
     // 2. Perform Initialization & Routing
     const initializeApp = async () => {
       const startTime = Date.now();
-      let hasCompletedOnboarding = false;
-
-      try {
-        const onboardingState = await AsyncStorage.getItem('onboarding_completed');
-        hasCompletedOnboarding = onboardingState === 'true';
-      } catch (e) {
-        console.error('Error reading onboarding state', e);
-      }
 
       // Ensure minimum display time so it doesn't flash violently if storage is fast
       const elapsed = Date.now() - startTime;
@@ -93,11 +84,7 @@ export default function IndexScreen() {
 
       // Route
       if (!user) {
-        if (hasCompletedOnboarding) {
-          router.replace('/(auth)/login');
-        } else {
-          router.replace('/(auth)/onboarding');
-        }
+        router.replace('/(auth)/onboarding');
         return;
       }
 
@@ -143,7 +130,7 @@ export default function IndexScreen() {
       end={theme.gradients.darkBackground.end}
       style={styles.container}
     >
-      <LocationAtmosphere />
+      <LocationAtmosphere theme={theme} />
 
       {/* Main Content */}
       <View style={styles.centerContent}>
@@ -158,7 +145,7 @@ export default function IndexScreen() {
             end={theme.gradients.primary.end}
             style={styles.logoInner}
           >
-            <Wrench size={48} color="#FFFFFF" />
+            <Wrench size={48} color={theme.colors.white} />
           </LinearGradient>
         </Animated.View>
 
@@ -217,7 +204,7 @@ const styles = StyleSheet.create({
     width: 140,
     height: 140,
     borderRadius: 70,
-    backgroundColor: 'rgba(99,102,241,0.20)', // Subtle brand indigo glow
+    backgroundColor: 'rgba(186,85,211,0.20)',
     transform: [{ scale: 1.5 }],
   },
   logoInner: {
@@ -242,7 +229,7 @@ const styles = StyleSheet.create({
   loadingTrack: {
     width: 140,
     height: 4,
-    backgroundColor: '#1A2130', // dark surface elevated
+    backgroundColor: '#D9D9D9',
     borderRadius: 2,
     marginBottom: 16,
     overflow: 'hidden',

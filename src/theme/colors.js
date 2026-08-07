@@ -1,71 +1,103 @@
-export const palette = {
-  brandBlue: '#3B82F6',
-  brandIndigo: '#6366F1',
-  brandViolet: '#8B5CF6',
-  brandPurple: '#9333EA',
-  cyanAccent: '#22D3EE',
-  success: '#22C55E',
-  warning: '#F59E0B',
-  danger: '#EF4444',
-  info: '#3B82F6',
+const hexToRgb = (hex) => {
+  const normalized = hex.replace('#', '');
+  const value =
+    normalized.length === 3
+      ? normalized
+          .split('')
+          .map((char) => char + char)
+          .join('')
+      : normalized;
+
+  const numeric = Number.parseInt(value, 16);
+
+  return {
+    r: (numeric >> 16) & 255,
+    g: (numeric >> 8) & 255,
+    b: numeric & 255,
+  };
 };
 
-export const lightColors = {
-  primary: palette.brandIndigo,
-  success: palette.success,
-  warning: palette.warning,
-  danger: palette.danger,
-  info: palette.info,
-  
-  background: '#F7F9FC',
-  backgroundSecondary: '#F1F5F9',
-  backgroundElevated: '#FFFFFF',
-  surface: '#FFFFFF',
-  surfaceSecondary: '#F8FAFC',
-  surfaceElevated: '#FFFFFF',
-  input: '#FFFFFF',
-  border: '#E2E8F0',
-  borderSoft: 'rgba(15,23,42,0.07)',
-  divider: 'rgba(15,23,42,0.06)',
-  text: '#0F172A',
-  textSecondary: '#64748B',
-  textMuted: '#94A3B8',
-  icon: '#334155',
-  iconMuted: '#94A3B8',
-  overlay: 'rgba(15,23,42,0.45)',
-
-  // Legacy mappings to avoid breaking changes instantly, these should be phased out
-  textPrimary: '#0F172A',
-  borderLight: 'rgba(15,23,42,0.07)',
-  brandDark: '#080B12',
+const withAlpha = (hex, alpha) => {
+  const { r, g, b } = hexToRgb(hex);
+  return `rgba(${r},${g},${b},${alpha})`;
 };
 
-export const darkColors = {
-  primary: palette.brandIndigo,
-  success: palette.success,
-  warning: palette.warning,
-  danger: palette.danger,
-  info: palette.info,
-  
-  background: '#080B12',
-  backgroundSecondary: '#0C1220',
-  backgroundElevated: '#111A32',
-  surface: '#141A25',
-  surfaceSecondary: '#111827',
-  surfaceElevated: '#1A2130',
-  input: '#151C29',
-  border: '#263044',
-  borderSoft: 'rgba(255,255,255,0.07)',
-  divider: 'rgba(255,255,255,0.06)',
-  text: '#F8FAFC',
-  textSecondary: '#A7B0C0',
-  textMuted: '#6F7A8D',
-  icon: '#CBD5E1',
-  iconMuted: '#6F7A8D',
-  overlay: 'rgba(0,0,0,0.60)',
-
-  // Legacy mappings
-  textPrimary: '#F8FAFC',
-  borderLight: 'rgba(255,255,255,0.07)',
-  brandDark: '#080B12',
+export const tokens = {
+  primary: {
+    500: '#FF6A00',
+    400: '#FF8833',
+    300: '#FFA666',
+    200: '#FFC499',
+    100: '#FFE1CC',
+  },
+  dark: {
+    500: '#1A1A1A',
+    400: '#4D4D4D',
+    300: '#808080',
+    200: '#B3B3B3',
+    100: '#E6E6E6',
+  },
+  grey: {
+    500: '#D9D9D9',
+    400: '#E1E1E1',
+    300: '#E9E9E9',
+    200: '#F1F1F1',
+    100: '#FAFAFA',
+  },
+  accentBlue: '#1E90FF',
+  accentOrange: '#FA5A3D',
+  accentPurple: '#BA55D3',
+  success: '#4CAF50',
+  failed: '#E8291C',
+  warning: '#FF7A29',
 };
+
+const createThemeColors = () => ({
+  primary: tokens.primary[500],
+  dark: tokens.dark,
+  grey: tokens.grey,
+  accentBlue: tokens.accentBlue,
+  accentOrange: tokens.accentOrange,
+  accentPurple: tokens.accentPurple,
+  success: tokens.success,
+  failed: tokens.failed,
+  warning: tokens.warning,
+
+  // Compatibility mappings while screens are migrated to the token families directly.
+  background: tokens.grey[100],
+  backgroundSecondary: tokens.primary[100],
+  backgroundElevated: tokens.grey[100],
+  surface: tokens.grey[100],
+  surfaceSecondary: tokens.grey[200],
+  surfaceElevated: tokens.grey[100],
+  input: tokens.grey[100],
+  border: tokens.grey[500],
+  borderSoft: withAlpha(tokens.dark[500], 0.08),
+  divider: withAlpha(tokens.dark[500], 0.1),
+  text: tokens.dark[500],
+  textPrimary: tokens.dark[500],
+  textSecondary: tokens.dark[400],
+  textMuted: tokens.dark[300],
+  icon: tokens.dark[500],
+  iconMuted: tokens.dark[300],
+  overlay: withAlpha(tokens.dark[500], 0.45),
+  brandDark: tokens.dark[500],
+  borderLight: tokens.grey[400],
+  primarySoft: tokens.primary[100],
+  primaryDark: tokens.primary[400],
+  accent: tokens.accentPurple,
+  danger: tokens.failed,
+  info: tokens.accentBlue,
+  white: tokens.grey[100],
+  whiteMuted: withAlpha(tokens.grey[100], 0.7),
+  successSoft: withAlpha(tokens.success, 0.12),
+  failedSoft: withAlpha(tokens.failed, 0.12),
+  warningSoft: withAlpha(tokens.warning, 0.12),
+  accentBlueSoft: withAlpha(tokens.accentBlue, 0.12),
+  accentOrangeSoft: withAlpha(tokens.accentOrange, 0.12),
+  accentPurpleSoft: withAlpha(tokens.accentPurple, 0.12),
+});
+
+export const lightColors = createThemeColors();
+
+export { withAlpha };

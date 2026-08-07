@@ -10,20 +10,16 @@ import * as SplashScreen from 'expo-splash-screen';
 import { GlobalBackground } from '../src/components/ui/GlobalBackground';
 import { 
   useFonts, 
-  Inter_400Regular, 
-  Inter_500Medium, 
-  Inter_600SemiBold, 
-  Inter_700Bold 
-} from '@expo-google-fonts/inter';
+  Quicksand_400Regular,
+  Quicksand_700Bold
+} from '@expo-google-fonts/quicksand';
 
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
   const [fontsLoaded] = useFonts({
-    Inter_400Regular,
-    Inter_500Medium,
-    Inter_600SemiBold,
-    Inter_700Bold,
+    Quicksand_400Regular,
+    Quicksand_700Bold,
   });
 
   useEffect(() => {

@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, StyleSheet, KeyboardAvoidingView, Platform, ScrollView, TextInput, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, KeyboardAvoidingView, Platform, ScrollView, TextInput, TouchableOpacity, Keyboard } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { ArrowLeft, MessageSquare, ShieldCheck } from 'lucide-react-native';
 import Animated, { FadeInUp, FadeIn, useAnimatedStyle, withSpring } from 'react-native-reanimated';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
+import { StatusBar } from 'expo-status-bar';
 import { useAppTheme } from '../../src/hooks/useAppTheme';
 import { Typography } from '../../src/components/ui/Typography';
 import { Button } from '../../src/components/ui/Button';
@@ -36,7 +37,6 @@ const OtpBox = ({ value, isFocused, hasError, onChange, onKeyPress, onFocus, inp
         onFocus={onFocus}
         keyboardType="number-pad"
         maxLength={1}
-        selectTextOnFocus
       />
     </Animated.View>
   );
@@ -51,6 +51,7 @@ export default function OtpScreen() {
   const [countdown, setCountdown] = useState(59);
   const router = useRouter();
   const { theme } = useAppTheme();
+  const insets = useSafeAreaInsets();
   
   const inputs = useRef([]);
 
@@ -65,6 +66,7 @@ export default function OtpScreen() {
   // Auto-verify when all 6 digits are filled
   useEffect(() => {
     if (code.every(digit => digit !== '') && code.length === 6 && !loading) {
+      Keyboard.dismiss();
       handleVerify(code.join(''));
     }
   }, [code]);
@@ -105,8 +107,16 @@ export default function OtpScreen() {
   };
 
   const handleKeyPress = (e, index) => {
-    if (e.nativeEvent.key === 'Backspace' && !code[index] && index > 0) {
-      inputs.current[index - 1].focus();
+    if (e.nativeEvent.key === 'Backspace') {
+      if (code[index]) {
+        // If there's a value, let onChangeText handle clearing it
+      } else if (index > 0) {
+        // If empty, move to previous box and clear it
+        inputs.current[index - 1].focus();
+        const newCode = [...code];
+        newCode[index - 1] = '';
+        setCode(newCode);
+      }
     }
   };
 
@@ -117,6 +127,10 @@ export default function OtpScreen() {
       setLoading(true);
       await authService.sendOTP(phone);
       setCountdown(59);
+      setCode(['', '', '', '', '', '']);
+      if (inputs.current[0]) {
+        inputs.current[0].focus();
+      }
     } catch (err) {
       setError('Failed to resend code. Please try again.');
     } finally {
@@ -129,15 +143,18 @@ export default function OtpScreen() {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: 'transparent' }} edges={['top', 'bottom', 'left', 'right']}>
+      <StatusBar style="light" backgroundColor={theme.colors.primary} />
+      <View style={{ position: 'absolute', top: 0, left: 0, right: 0, height: insets.top, backgroundColor: theme.colors.primary, zIndex: 10 }} />
       <KeyboardAvoidingView
         style={[styles.container, { backgroundColor: 'transparent' }]}
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
       >
         <View style={styles.headerBar}>
-          <IconButton
-            icon={<ArrowLeft size={24} color={theme.colors.textPrimary} />}
-            onPress={() => router.back()}
-          />
+          <TouchableOpacity onPress={() => router.back()} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
+            <ArrowLeft size={24} color={theme.colors.textPrimary} />
+          </TouchableOpacity>
+          <Typography variant="h3" weight="bold" style={styles.headerTitle}>OTP Verification</Typography>
+          <View style={{ width: 24 }} />
         </View>
       <ScrollView contentContainerStyle={styles.scrollContent} keyboardShouldPersistTaps="handled">
         
@@ -203,13 +220,14 @@ export default function OtpScreen() {
         
         <Animated.View entering={FadeInUp.duration(600).delay(300)} style={styles.footer}>
           <Button
-            title="Verify"
+            title={loading ? "Verifying..." : "Submit"}
             onPress={() => handleVerify()}
             loading={loading}
             disabled={!isComplete}
             fullWidth
+            size="large"
             style={styles.button}
-            variant={isComplete ? "primary" : "disabled"} // Assumes disabled variant exists or button handles disabled state
+            variant="primary"
           />
         </Animated.View>
       </ScrollView>
@@ -223,9 +241,15 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   headerBar: {
-    paddingHorizontal: 16,
-    paddingTop: 60,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 24,
+    paddingTop: 16,
     paddingBottom: 16,
+  },
+  headerTitle: {
+    fontSize: 18,
   },
   scrollContent: {
     flexGrow: 1,

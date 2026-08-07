@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
-import { ChevronRight, LogOut, Moon, Sun, Monitor, Bell, Settings, Shield, User as UserIcon, Bookmark } from 'lucide-react-native';
+import { ChevronRight, LogOut, Bell, Settings, Shield, User as UserIcon, Bookmark } from 'lucide-react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { useAppTheme } from '../../src/hooks/useAppTheme';
@@ -9,7 +9,7 @@ import { Typography } from '../../src/components/ui/Typography';
 import { Avatar } from '../../src/components/ui/Avatar';
 
 export default function ProfileScreen() {
-  const { theme, themeMode, setThemeMode } = useAppTheme();
+  const { theme } = useAppTheme();
   const { logout, user } = useAuth();
   const insets = useSafeAreaInsets();
   const router = useRouter();
@@ -51,24 +51,6 @@ export default function ProfileScreen() {
     </View>
   );
 
-  const handleThemeToggle = () => {
-    if (themeMode === 'system') setThemeMode('light');
-    else if (themeMode === 'light') setThemeMode('dark');
-    else setThemeMode('system');
-  };
-
-  const getThemeIcon = () => {
-    if (themeMode === 'system') return (color) => <Monitor size={20} color={color} />;
-    if (themeMode === 'dark') return (color) => <Moon size={20} color={color} />;
-    return (color) => <Sun size={20} color={color} />;
-  };
-
-  const getThemeText = () => {
-    if (themeMode === 'system') return 'System Default';
-    if (themeMode === 'dark') return 'Dark Mode';
-    return 'Light Mode';
-  };
-
   return (
     <View style={[styles.container, { backgroundColor: 'transparent', paddingTop: insets.top }]}>
       <ScrollView contentContainerStyle={styles.scrollContent}>
@@ -103,13 +85,6 @@ export default function ProfileScreen() {
           <MenuItem
             icon={(color) => <Bell size={20} color={color} />}
             title="Notifications"
-          />
-          <MenuItem
-            icon={getThemeIcon()}
-            title="Appearance"
-            subtitle={getThemeText()}
-            onPress={handleThemeToggle}
-            showArrow={false}
           />
         </Section>
 
