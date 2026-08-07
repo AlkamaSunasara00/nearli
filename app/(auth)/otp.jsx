@@ -5,6 +5,7 @@ import { ArrowLeft, MessageSquare, ShieldCheck } from 'lucide-react-native';
 import Animated, { FadeInUp, FadeIn, useAnimatedStyle, withSpring } from 'react-native-reanimated';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
+import { BlurView } from 'expo-blur';
 import { useAppTheme } from '../../src/hooks/useAppTheme';
 import { Typography } from '../../src/components/ui/Typography';
 import { Button } from '../../src/components/ui/Button';
@@ -150,8 +151,10 @@ export default function OtpScreen() {
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
       >
         <View style={styles.headerBar}>
-          <TouchableOpacity onPress={() => router.back()} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
-            <ArrowLeft size={24} color={theme.colors.textPrimary} />
+          <TouchableOpacity onPress={() => router.back()} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }} style={styles.backButtonContainer}>
+            <BlurView intensity={50} tint="light" style={styles.backButton}>
+              <ArrowLeft size={20} color={theme.colors.textPrimary} />
+            </BlurView>
           </TouchableOpacity>
           <Typography variant="h3" weight="bold" style={styles.headerTitle}>OTP Verification</Typography>
           <View style={{ width: 24 }} />
@@ -247,6 +250,20 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     paddingTop: 16,
     paddingBottom: 16,
+  },
+  backButtonContainer: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    overflow: 'hidden',
+    borderWidth: 1,
+    borderColor: 'rgba(0, 0, 0, 0.05)',
+    backgroundColor: 'rgba(0, 0, 0, 0.03)',
+  },
+  backButton: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   headerTitle: {
     fontSize: 18,

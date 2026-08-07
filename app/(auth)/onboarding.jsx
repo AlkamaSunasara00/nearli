@@ -6,6 +6,7 @@ import { StatusBar } from 'expo-status-bar';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Home, TreePine, Circle, Heart, ThumbsUp, CarFront } from 'lucide-react-native';
 import Animated, { FadeInRight, FadeIn } from 'react-native-reanimated';
+import { BlurView } from 'expo-blur';
 
 import { useAppTheme } from '../../src/hooks/useAppTheme';
 import { Typography } from '../../src/components/ui/Typography';
@@ -44,11 +45,13 @@ const SkipPill = ({ theme, onPress, topInset }) => (
   <TouchableOpacity
     onPress={onPress}
     activeOpacity={0.85}
-    style={[styles.skipPill, { backgroundColor: 'rgba(255,255,255,0.12)', top: Math.max((topInset || 0) + 16, 44) }]}
+    style={[styles.skipPillContainer, { top: Math.max((topInset || 0) + 16, 44) }]}
   >
-    <Typography variant="p3" weight="bold" style={{ color: theme.colors.white }}>
-      Skip
-    </Typography>
+    <BlurView intensity={50} tint="light" style={styles.skipPill}>
+      <Typography variant="p3" weight="bold" style={{ color: theme.colors.white }}>
+        Skip
+      </Typography>
+    </BlurView>
   </TouchableOpacity>
 );
 
@@ -347,13 +350,20 @@ const styles = StyleSheet.create({
   heroDotThree: { top: 66, right: 84 },
   heroDotFour: { top: 142, right: 30 },
   heroDotFive: { bottom: 32, right: 72, width: 22, height: 22, backgroundColor: 'rgba(255,255,255,0.10)' },
-  skipPill: {
+  skipPillContainer: {
     position: 'absolute',
     right: 22,
     zIndex: 3,
+    borderRadius: 999,
+    overflow: 'hidden',
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.3)',
+  },
+  skipPill: {
     paddingHorizontal: 18,
     paddingVertical: 10,
-    borderRadius: 999,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   illustrationWrap: {
     flex: 1,

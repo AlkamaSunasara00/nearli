@@ -1,18 +1,19 @@
-import React, { useState } from 'react';
-import { View, StyleSheet, ScrollView, KeyboardAvoidingView, Platform, TouchableOpacity, Image } from 'react-native';
-import { useRouter } from 'expo-router';
-import { Camera, MapPin, ArrowLeft, Check, CheckCircle2, ChevronRight, Map, Clock, Upload, Circle, CheckCircle } from 'lucide-react-native';
-import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
-import { StatusBar } from 'expo-status-bar';
-import { LinearGradient } from 'expo-linear-gradient';
 import * as ImagePicker from 'expo-image-picker';
+import { LinearGradient } from 'expo-linear-gradient';
 import * as Location from 'expo-location';
+import { useRouter } from 'expo-router';
+import { StatusBar } from 'expo-status-bar';
+import { ArrowLeft, Check, CheckCircle2, ChevronRight, Circle, Map, Upload } from 'lucide-react-native';
+import { useState } from 'react';
+import { Image, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
 import Animated, { FadeInRight, FadeOutLeft } from 'react-native-reanimated';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
+import { BlurView } from 'expo-blur';
+import { Button } from '../../src/components/ui/Button';
+import { TextInput } from '../../src/components/ui/TextInput';
+import { Typography } from '../../src/components/ui/Typography';
 import { useAppTheme } from '../../src/hooks/useAppTheme';
 import { useAuth } from '../../src/hooks/useAuth';
-import { Typography } from '../../src/components/ui/Typography';
-import { TextInput } from '../../src/components/ui/TextInput';
-import { Button } from '../../src/components/ui/Button';
 
 // Utility for Time Picker
 const generateTimeSlots = () => {
@@ -35,7 +36,7 @@ export default function ProviderSetupWizard() {
   const router = useRouter();
   const { login } = useAuth();
   const insets = useSafeAreaInsets();
-  
+
   const [step, setStep] = useState(1);
   const totalSteps = 7;
   const [loading, setLoading] = useState(false);
@@ -98,8 +99,8 @@ export default function ProviderSetupWizard() {
         longitude: location.coords.longitude
       });
       if (geocode && geocode.length > 0) {
-        setFormData({ 
-          ...formData, 
+        setFormData({
+          ...formData,
           locationText: `${geocode[0].city || geocode[0].region}, ${geocode[0].country}`,
           city: geocode[0].city || formData.city,
           pincode: geocode[0].postalCode || formData.pincode,
@@ -134,12 +135,12 @@ export default function ProviderSetupWizard() {
   const renderStep1 = () => (
     <Animated.View entering={FadeInRight} exiting={FadeOutLeft} style={styles.stepContainer}>
       <Typography variant="h3" weight="bold" style={styles.stepTitle}>Basic Information</Typography>
-      <TextInput label="Business Name *" placeholder="e.g. Acme Auto" value={formData.businessName} onChangeText={t => setFormData({...formData, businessName: t})} />
-      <TextInput label="Owner Name *" placeholder="e.g. John Doe" value={formData.ownerName} onChangeText={t => setFormData({...formData, ownerName: t})} />
-      <TextInput label="Phone Number" placeholder="e.g. +91 9999999999" value={formData.phone} onChangeText={t => setFormData({...formData, phone: t})} keyboardType="phone-pad" />
-      <TextInput label="WhatsApp" placeholder="e.g. +91 9999999999" value={formData.whatsapp} onChangeText={t => setFormData({...formData, whatsapp: t})} keyboardType="phone-pad" />
-      <TextInput label="Email" placeholder="business@example.com" value={formData.email} onChangeText={t => setFormData({...formData, email: t})} keyboardType="email-address" autoCapitalize="none" />
-      <TextInput label="Business Description" placeholder="Describe your services" value={formData.description} onChangeText={t => setFormData({...formData, description: t})} multiline />
+      <TextInput label="Business Name *" placeholder="e.g. Acme Auto" value={formData.businessName} onChangeText={t => setFormData({ ...formData, businessName: t })} />
+      <TextInput label="Owner Name *" placeholder="e.g. John Doe" value={formData.ownerName} onChangeText={t => setFormData({ ...formData, ownerName: t })} />
+      <TextInput label="Phone Number" placeholder="e.g. +91 9999999999" value={formData.phone} onChangeText={t => setFormData({ ...formData, phone: t })} keyboardType="phone-pad" />
+      <TextInput label="WhatsApp" placeholder="e.g. +91 9999999999" value={formData.whatsapp} onChangeText={t => setFormData({ ...formData, whatsapp: t })} keyboardType="phone-pad" />
+      <TextInput label="Email" placeholder="business@example.com" value={formData.email} onChangeText={t => setFormData({ ...formData, email: t })} keyboardType="email-address" autoCapitalize="none" />
+      <TextInput label="Business Description" placeholder="Describe your services" value={formData.description} onChangeText={t => setFormData({ ...formData, description: t })} multiline />
     </Animated.View>
   );
 
@@ -148,20 +149,20 @@ export default function ProviderSetupWizard() {
     return (
       <Animated.View entering={FadeInRight} exiting={FadeOutLeft} style={styles.stepContainer}>
         <Typography variant="h3" weight="bold" style={styles.stepTitle}>Select Category</Typography>
-        <Typography variant="bodyMedium" color="textSecondary" style={{marginBottom: 24}}>Choose one category for your business.</Typography>
-        
+        <Typography variant="bodyMedium" color="textSecondary" style={{ marginBottom: 24 }}>Choose one category for your business.</Typography>
+
         {categories.map(cat => {
           const isSelected = formData.category === cat;
           return (
-            <TouchableOpacity 
+            <TouchableOpacity
               key={cat}
-              style={[styles.categoryCard, { 
+              style={[styles.categoryCard, {
                 borderColor: isSelected ? theme.colors.primary : theme.colors.border,
                 backgroundColor: theme.colors.surface,
                 borderWidth: isSelected ? 0 : 2,
                 overflow: 'hidden'
               }]}
-              onPress={() => setFormData({...formData, category: cat})}
+              onPress={() => setFormData({ ...formData, category: cat })}
             >
               {isSelected && (
                 <LinearGradient
@@ -177,7 +178,7 @@ export default function ProviderSetupWizard() {
                     <Check size={16} color="#FFFFFF" strokeWidth={3} />
                   </View>
                 ) : <Circle color={theme.colors.border} />}
-                <Typography variant="h4" weight={isSelected ? "bold" : "medium"} style={{marginLeft: 12, color: isSelected ? '#FFFFFF' : theme.colors.textPrimary, zIndex: 1}}>
+                <Typography variant="h4" weight={isSelected ? "bold" : "medium"} style={{ marginLeft: 12, color: isSelected ? '#FFFFFF' : theme.colors.textPrimary, zIndex: 1 }}>
                   {cat}
                 </Typography>
               </View>
@@ -198,17 +199,17 @@ export default function ProviderSetupWizard() {
     const toggleService = (srv) => {
       const isSelected = formData.services.includes(srv);
       if (isSelected) {
-        setFormData({...formData, services: formData.services.filter(s => s !== srv)});
+        setFormData({ ...formData, services: formData.services.filter(s => s !== srv) });
       } else {
-        setFormData({...formData, services: [...formData.services, srv]});
+        setFormData({ ...formData, services: [...formData.services, srv] });
       }
     };
 
     return (
       <Animated.View entering={FadeInRight} exiting={FadeOutLeft} style={styles.stepContainer}>
         <Typography variant="h3" weight="bold" style={styles.stepTitle}>Services Provided</Typography>
-        <Typography variant="bodyMedium" color="textSecondary" style={{marginBottom: 24}}>Select what you offer for {formData.category}</Typography>
-        
+        <Typography variant="bodyMedium" color="textSecondary" style={{ marginBottom: 24 }}>Select what you offer for {formData.category}</Typography>
+
         <View style={styles.pillContainer}>
           {options.map(opt => {
             const isSelected = formData.services.includes(opt);
@@ -216,7 +217,7 @@ export default function ProviderSetupWizard() {
               <TouchableOpacity
                 key={opt}
                 onPress={() => toggleService(opt)}
-                style={[styles.pill, { 
+                style={[styles.pill, {
                   backgroundColor: theme.colors.surfaceSecondary,
                   borderColor: isSelected ? theme.colors.primary : 'transparent',
                   borderWidth: isSelected ? 0 : 1,
@@ -243,17 +244,17 @@ export default function ProviderSetupWizard() {
   const renderStep4 = () => (
     <Animated.View entering={FadeInRight} exiting={FadeOutLeft} style={styles.stepContainer}>
       <Typography variant="h3" weight="bold" style={styles.stepTitle}>Business Address</Typography>
-      
+
       <TouchableOpacity onPress={getLocation} style={[styles.mapPlaceholder, { backgroundColor: theme.colors.surfaceSecondary }]}>
         <Map size={48} color={formData.locationText ? theme.colors.primary : theme.colors.textMuted} />
-        <Typography variant="bodyMedium" color={formData.locationText ? "primary" : "textMuted"} style={{marginTop: 12}}>
+        <Typography variant="bodyMedium" color={formData.locationText ? "primary" : "textMuted"} style={{ marginTop: 12 }}>
           {formData.locationText || "Tap to set Current Location"}
         </Typography>
       </TouchableOpacity>
 
-      <TextInput label="Address" placeholder="Street, Building, Area" value={formData.address} onChangeText={t => setFormData({...formData, address: t})} multiline />
-      <TextInput label="City" placeholder="e.g. Mumbai" value={formData.city} onChangeText={t => setFormData({...formData, city: t})} />
-      <TextInput label="Pincode" placeholder="e.g. 400001" value={formData.pincode} onChangeText={t => setFormData({...formData, pincode: t})} keyboardType="number-pad" />
+      <TextInput label="Address" placeholder="Street, Building, Area" value={formData.address} onChangeText={t => setFormData({ ...formData, address: t })} multiline />
+      <TextInput label="City" placeholder="e.g. Mumbai" value={formData.city} onChangeText={t => setFormData({ ...formData, city: t })} />
+      <TextInput label="Pincode" placeholder="e.g. 400001" value={formData.pincode} onChangeText={t => setFormData({ ...formData, pincode: t })} keyboardType="number-pad" />
     </Animated.View>
   );
 
@@ -267,28 +268,28 @@ export default function ProviderSetupWizard() {
       { id: 'Sat', label: 'Saturday' },
       { id: 'Sun', label: 'Sunday' }
     ];
-    
+
     const toggleDay = (d) => {
       const isSelected = formData.days.includes(d);
       if (isSelected) {
-        setFormData({...formData, days: formData.days.filter(day => day !== d)});
+        setFormData({ ...formData, days: formData.days.filter(day => day !== d) });
       } else {
-        setFormData({...formData, days: [...formData.days, d]});
+        setFormData({ ...formData, days: [...formData.days, d] });
       }
     };
 
     return (
       <Animated.View entering={FadeInRight} exiting={FadeOutLeft} style={styles.stepContainer}>
         <Typography variant="h3" weight="bold" style={styles.stepTitle}>Opening Hours</Typography>
-        <Typography variant="bodyMedium" color="textSecondary" style={{marginBottom: 24}}>Select the days and times you are open for business.</Typography>
-        
+        <Typography variant="bodyMedium" color="textSecondary" style={{ marginBottom: 24 }}>Select the days and times you are open for business.</Typography>
+
         <View style={{ marginBottom: 32 }}>
           <Typography variant="bodyMedium" weight="bold" style={{ marginBottom: 12 }}>Available Days</Typography>
           <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 10 }}>
             {allDays.map(d => {
               const isSelected = formData.days.includes(d.id);
               return (
-                <TouchableOpacity 
+                <TouchableOpacity
                   key={d.id}
                   onPress={() => toggleDay(d.id)}
                   style={{
@@ -309,21 +310,21 @@ export default function ProviderSetupWizard() {
 
         <Typography variant="bodyMedium" weight="bold" style={{ marginBottom: 12 }}>Working Hours</Typography>
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', gap: 16 }}>
-           <TouchableOpacity 
-             onPress={() => { setTimePickerTarget('openTime'); setTimePickerVisible(true); }}
-             style={[styles.timeBox, { backgroundColor: theme.colors.surfaceSecondary, borderColor: theme.colors.border }]}
-           >
-             <Typography variant="bodySmall" color="textMuted" style={{marginBottom: 4}}>Opening Time</Typography>
-             <Typography variant="h4" weight="bold">{formData.openTime}</Typography>
-           </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => { setTimePickerTarget('openTime'); setTimePickerVisible(true); }}
+            style={[styles.timeBox, { backgroundColor: theme.colors.surfaceSecondary, borderColor: theme.colors.border }]}
+          >
+            <Typography variant="bodySmall" color="textMuted" style={{ marginBottom: 4 }}>Opening Time</Typography>
+            <Typography variant="h4" weight="bold">{formData.openTime}</Typography>
+          </TouchableOpacity>
 
-           <TouchableOpacity 
-             onPress={() => { setTimePickerTarget('closeTime'); setTimePickerVisible(true); }}
-             style={[styles.timeBox, { backgroundColor: theme.colors.surfaceSecondary, borderColor: theme.colors.border }]}
-           >
-             <Typography variant="bodySmall" color="textMuted" style={{marginBottom: 4}}>Closing Time</Typography>
-             <Typography variant="h4" weight="bold">{formData.closeTime}</Typography>
-           </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => { setTimePickerTarget('closeTime'); setTimePickerVisible(true); }}
+            style={[styles.timeBox, { backgroundColor: theme.colors.surfaceSecondary, borderColor: theme.colors.border }]}
+          >
+            <Typography variant="bodySmall" color="textMuted" style={{ marginBottom: 4 }}>Closing Time</Typography>
+            <Typography variant="h4" weight="bold">{formData.closeTime}</Typography>
+          </TouchableOpacity>
         </View>
       </Animated.View>
     );
@@ -336,7 +337,7 @@ export default function ProviderSetupWizard() {
       ) : (
         <>
           <Upload size={24} color={theme.colors.textMuted} />
-          <Typography variant="caption" color="textMuted" style={{marginTop: 8}}>{label}</Typography>
+          <Typography variant="caption" color="textMuted" style={{ marginTop: 8 }}>{label}</Typography>
         </>
       )}
     </TouchableOpacity>
@@ -345,8 +346,8 @@ export default function ProviderSetupWizard() {
   const renderStep6 = () => (
     <Animated.View entering={FadeInRight} exiting={FadeOutLeft} style={styles.stepContainer}>
       <Typography variant="h3" weight="bold" style={styles.stepTitle}>Upload Photos</Typography>
-      <Typography variant="bodyMedium" color="textSecondary" style={{marginBottom: 24}}>Minimum 3 Photos Required (Tap to select)</Typography>
-      
+      <Typography variant="bodyMedium" color="textSecondary" style={{ marginBottom: 24 }}>Minimum 3 Photos Required (Tap to select)</Typography>
+
       <View style={styles.photoGrid}>
         <PhotoBox type="logo" label="Business Logo" />
         <PhotoBox type="cover" label="Cover Photo" />
@@ -359,20 +360,20 @@ export default function ProviderSetupWizard() {
   const renderStep7 = () => (
     <Animated.View entering={FadeInRight} exiting={FadeOutLeft} style={styles.stepContainer}>
       <Typography variant="h3" weight="bold" style={styles.stepTitle}>Review Details</Typography>
-      <Typography variant="bodyMedium" color="textSecondary" style={{marginBottom: 24}}>Please verify your profile before submitting.</Typography>
-      
+      <Typography variant="bodyMedium" color="textSecondary" style={{ marginBottom: 24 }}>Please verify your profile before submitting.</Typography>
+
       <View style={[styles.premiumReviewBox, { backgroundColor: theme.colors.surface, borderColor: theme.colors.border, borderWidth: 1, overflow: 'hidden', padding: 0 }]}>
-        
+
         {/* Banner Image */}
         <View style={{ height: 120, width: '100%', backgroundColor: theme.colors.surfaceSecondary }}>
           {formData.photos.cover ? (
-             <Image source={{ uri: formData.photos.cover }} style={{ width: '100%', height: '100%' }} />
+            <Image source={{ uri: formData.photos.cover }} style={{ width: '100%', height: '100%' }} />
           ) : formData.photos.gallery1 ? (
-             <Image source={{ uri: formData.photos.gallery1 }} style={{ width: '100%', height: '100%' }} />
+            <Image source={{ uri: formData.photos.gallery1 }} style={{ width: '100%', height: '100%' }} />
           ) : (
-             <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-               <Typography color="textMuted">No Cover Photo</Typography>
-             </View>
+            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+              <Typography color="textMuted">No Cover Photo</Typography>
+            </View>
           )}
         </View>
 
@@ -380,55 +381,55 @@ export default function ProviderSetupWizard() {
         <View style={{ padding: 24, paddingTop: 12 }}>
           <View style={styles.reviewHeader}>
             {formData.photos.logo ? (
-               <Image source={{ uri: formData.photos.logo }} style={styles.reviewLogo} />
+              <Image source={{ uri: formData.photos.logo }} style={styles.reviewLogo} />
             ) : (
-               <View style={[styles.reviewLogo, { backgroundColor: theme.colors.primary, justifyContent: 'center', alignItems: 'center' }]}>
-                 <Typography color="white" weight="bold" variant="h3">{(formData.businessName || 'B')[0]}</Typography>
-               </View>
+              <View style={[styles.reviewLogo, { backgroundColor: theme.colors.primary, justifyContent: 'center', alignItems: 'center' }]}>
+                <Typography color="white" weight="bold" variant="h3">{(formData.businessName || 'B')[0]}</Typography>
+              </View>
             )}
             <View style={{ flex: 1, marginLeft: 16, marginTop: 32 }}>
-               <Typography variant="h4" weight="bold">{formData.businessName || 'Your Business Name'}</Typography>
-               <Typography variant="bodyMedium" color="textSecondary">{formData.category || 'Category'} • {formData.city || 'City'}</Typography>
+              <Typography variant="h4" weight="bold">{formData.businessName || 'Your Business Name'}</Typography>
+              <Typography variant="bodyMedium" color="textSecondary">{formData.category || 'Category'} • {formData.city || 'City'}</Typography>
             </View>
           </View>
 
           <View style={styles.reviewSection}>
-             <Typography variant="bodySmall" color="textMuted">OWNER & CONTACT</Typography>
-             <Typography variant="bodyMedium" weight="bold">{formData.ownerName || 'Not Set'}</Typography>
-             {formData.phone && <Typography variant="bodyMedium" color="textSecondary">{formData.phone}</Typography>}
+            <Typography variant="bodySmall" color="textMuted">OWNER & CONTACT</Typography>
+            <Typography variant="bodyMedium" weight="bold">{formData.ownerName || 'Not Set'}</Typography>
+            {formData.phone && <Typography variant="bodyMedium" color="textSecondary">{formData.phone}</Typography>}
           </View>
 
           <View style={styles.reviewSection}>
-             <Typography variant="bodySmall" color="textMuted">SERVICES OFFERED ({formData.services.length})</Typography>
-             <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 6, marginTop: 4 }}>
-                {formData.services.map(s => (
-                  <View key={s} style={{ backgroundColor: theme.colors.surfaceSecondary, borderColor: theme.colors.border, borderWidth: 1, paddingHorizontal: 8, paddingVertical: 4, borderRadius: 8 }}>
-                    <Typography variant="caption">{s}</Typography>
-                  </View>
-                ))}
-             </View>
+            <Typography variant="bodySmall" color="textMuted">SERVICES OFFERED ({formData.services.length})</Typography>
+            <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 6, marginTop: 4 }}>
+              {formData.services.map(s => (
+                <View key={s} style={{ backgroundColor: theme.colors.surfaceSecondary, borderColor: theme.colors.border, borderWidth: 1, paddingHorizontal: 8, paddingVertical: 4, borderRadius: 8 }}>
+                  <Typography variant="caption">{s}</Typography>
+                </View>
+              ))}
+            </View>
           </View>
 
           <View style={styles.reviewSection}>
-             <Typography variant="bodySmall" color="textMuted">HOURS</Typography>
-             <Typography variant="bodyMedium" weight="bold">{formData.days.join(', ')}</Typography>
-             <Typography variant="bodyMedium" color="textSecondary">{formData.openTime} - {formData.closeTime}</Typography>
+            <Typography variant="bodySmall" color="textMuted">HOURS</Typography>
+            <Typography variant="bodyMedium" weight="bold">{formData.days.join(', ')}</Typography>
+            <Typography variant="bodyMedium" color="textSecondary">{formData.openTime} - {formData.closeTime}</Typography>
           </View>
         </View>
       </View>
-      
+
       <View style={[styles.statusBox, { backgroundColor: '#FFF3E0', borderColor: '#FFB74D', borderWidth: 1 }]}>
-         <CheckCircle2 color="#F57C00" size={24} style={{marginRight: 12}} />
-         <View style={{flex: 1}}>
-           <Typography variant="bodyMedium" weight="bold" color="warning">Status: Pending Verification</Typography>
-           <Typography variant="caption" color="textSecondary">Your profile will be reviewed after submission.</Typography>
-         </View>
+        <CheckCircle2 color="#F57C00" size={24} style={{ marginRight: 12 }} />
+        <View style={{ flex: 1 }}>
+          <Typography variant="bodyMedium" weight="bold" color="warning">Status: Pending Verification</Typography>
+          <Typography variant="caption" color="textSecondary">Your profile will be reviewed after submission.</Typography>
+        </View>
       </View>
     </Animated.View>
   );
 
   const renderCurrentStep = () => {
-    switch(step) {
+    switch (step) {
       case 1: return renderStep1();
       case 2: return renderStep2();
       case 3: return renderStep3();
@@ -446,10 +447,12 @@ export default function ProviderSetupWizard() {
     <SafeAreaView style={{ flex: 1, backgroundColor: 'transparent' }} edges={['top', 'bottom', 'left', 'right']}>
       <StatusBar style="light" backgroundColor={theme.colors.primary} />
       <View style={{ position: 'absolute', top: 0, left: 0, right: 0, height: insets.top, backgroundColor: theme.colors.primary, zIndex: 10 }} />
-      
+
       <View style={[styles.headerBar, { backgroundColor: theme.colors.background }]}>
-        <TouchableOpacity onPress={handleBack} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
-          <ArrowLeft size={24} color={theme.colors.textPrimary} />
+        <TouchableOpacity onPress={handleBack} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }} style={styles.backButtonContainer}>
+          <BlurView intensity={50} tint="light" style={styles.backButton}>
+            <ArrowLeft size={20} color={theme.colors.textPrimary} />
+          </BlurView>
         </TouchableOpacity>
         <Typography variant="h3" weight="bold" style={styles.headerTitle}>Provider Setup</Typography>
         <View style={{ alignItems: 'center' }}><Typography variant="bodyMedium" weight="bold" color="primary">{step} / {totalSteps}</Typography></View>
@@ -459,30 +462,30 @@ export default function ProviderSetupWizard() {
         <View style={[styles.progressBar, { width: `${progressPercent}%`, backgroundColor: theme.colors.primary }]} />
       </View>
 
-      <KeyboardAvoidingView 
+      <KeyboardAvoidingView
         style={[styles.container, { backgroundColor: theme.colors.background }]}
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
         keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
       >
         <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.scroll} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
-          
+
           {renderCurrentStep()}
 
           <View style={styles.footer}>
             {step === totalSteps ? (
               <>
-                <Button title="Save Draft" variant="outline" style={{marginBottom: 12}} fullWidth onPress={() => {}} />
+                <Button title="Save Draft" variant="outline" style={{ marginBottom: 12 }} fullWidth onPress={() => { }} />
                 <Button title="Submit Application" variant="primary" onPress={handleSubmit} loading={loading} fullWidth size="large" />
               </>
             ) : (
-              <Button 
-                title="Next Step" 
-                variant="primary" 
-                onPress={handleNext} 
-                fullWidth 
+              <Button
+                title="Next Step"
+                variant="primary"
+                onPress={handleNext}
+                fullWidth
                 size="large"
                 rightIcon={<ChevronRight color="#FFFFFF" size={20} />}
-                disabled={step === 2 && !formData.category} 
+                disabled={step === 2 && !formData.category}
               />
             )}
           </View>
@@ -492,32 +495,32 @@ export default function ProviderSetupWizard() {
       {/* Time Picker Modal */}
       {timePickerVisible && (
         <View style={StyleSheet.absoluteFillObject}>
-          <TouchableOpacity 
-            style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.5)' }} 
-            activeOpacity={1} 
-            onPress={() => setTimePickerVisible(false)} 
+          <TouchableOpacity
+            style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.5)' }}
+            activeOpacity={1}
+            onPress={() => setTimePickerVisible(false)}
           />
           <View style={[styles.timePickerSheet, { backgroundColor: theme.colors.surface }]}>
             <View style={styles.timePickerHeader}>
-               <Typography variant="h4" weight="bold">
-                 Select {timePickerTarget === 'openTime' ? 'Opening' : 'Closing'} Time
-               </Typography>
-               <TouchableOpacity onPress={() => setTimePickerVisible(false)}>
-                 <Typography color="primary" weight="bold">Done</Typography>
-               </TouchableOpacity>
+              <Typography variant="h4" weight="bold">
+                Select {timePickerTarget === 'openTime' ? 'Opening' : 'Closing'} Time
+              </Typography>
+              <TouchableOpacity onPress={() => setTimePickerVisible(false)}>
+                <Typography color="primary" weight="bold">Done</Typography>
+              </TouchableOpacity>
             </View>
             <ScrollView style={{ maxHeight: 300 }}>
               {TIME_SLOTS.map(time => (
-                <TouchableOpacity 
-                  key={time} 
+                <TouchableOpacity
+                  key={time}
                   style={[styles.timeSlot, { borderBottomColor: theme.colors.border }]}
                   onPress={() => {
-                    setFormData({...formData, [timePickerTarget]: time});
+                    setFormData({ ...formData, [timePickerTarget]: time });
                     setTimePickerVisible(false);
                   }}
                 >
-                  <Typography 
-                    variant="h4" 
+                  <Typography
+                    variant="h4"
                     color={formData[timePickerTarget] === time ? 'primary' : 'textPrimary'}
                     weight={formData[timePickerTarget] === time ? 'bold' : 'regular'}
                   >
@@ -538,6 +541,8 @@ export default function ProviderSetupWizard() {
 const styles = StyleSheet.create({
   container: { flex: 1 },
   headerBar: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 24, paddingTop: 16, paddingBottom: 16 },
+  backButtonContainer: { width: 36, height: 36, borderRadius: 18, overflow: 'hidden', borderWidth: 1, borderColor: 'rgba(0,0,0,0.05)', backgroundColor: 'rgba(0,0,0,0.03)' },
+  backButton: { flex: 1, alignItems: 'center', justifyContent: 'center' },
   headerTitle: { fontSize: 18 },
   progressContainer: { height: 4, width: '100%' },
   progressBar: { height: '100%' },

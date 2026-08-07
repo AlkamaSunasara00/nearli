@@ -1,84 +1,74 @@
 import React, { useState } from 'react';
 import * as Location from 'expo-location';
-import { View, StyleSheet, TouchableOpacity, Pressable } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, Pressable, Image, ImageBackground, Dimensions } from 'react-native';
 import { useRouter } from 'expo-router';
-import { User, Wrench, CheckCircle2, ArrowLeft, Check } from 'lucide-react-native';
+import { ArrowLeft, ChevronRight, ShieldCheck, Check } from 'lucide-react-native';
 import Animated, { FadeInUp, FadeInDown, useAnimatedStyle, withSpring, useSharedValue } from 'react-native-reanimated';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import { LinearGradient } from 'expo-linear-gradient';
+import { BlurView } from 'expo-blur';
 import { useAppTheme } from '../../src/hooks/useAppTheme';
 import { useAuth } from '../../src/hooks/useAuth';
 import { Typography } from '../../src/components/ui/Typography';
 import { Button } from '../../src/components/ui/Button';
 
-// Animated Role Card
-const RoleCard = ({ type, title, description, icon, isSelected, onPress, theme, delay }) => {
+const { width, height } = Dimensions.get('window');
+
+const RoleCard = ({ title, description, imageSource, isSelected, onPress, theme, delay }) => {
   const scale = useSharedValue(1);
 
-  const handlePressIn = () => {
-    scale.value = withSpring(0.95);
-  };
+  const handlePressIn = () => { scale.value = withSpring(0.97); };
+  const handlePressOut = () => { scale.value = withSpring(1); onPress(); };
 
-  const handlePressOut = () => {
-    scale.value = withSpring(1);
-    onPress();
-  };
-
-  const animatedStyle = useAnimatedStyle(() => {
-    return {
-      transform: [{ scale: scale.value }],
-    };
-  });
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: scale.value }],
+  }));
 
   return (
     <Animated.View entering={FadeInUp.duration(600).delay(delay)} style={styles.cardWrapper}>
-      <Pressable
-        onPressIn={handlePressIn}
-        onPressOut={handlePressOut}
-      >
+      <Pressable onPressIn={handlePressIn} onPressOut={handlePressOut}>
         <Animated.View
           style={[
             styles.card,
             animatedStyle,
             {
-              backgroundColor: theme.colors.surface,
+              backgroundColor: isSelected ? (theme.colors.primarySoft || '#FFE8D6') : theme.colors.surface,
               borderColor: isSelected ? theme.colors.primary : theme.colors.borderLight,
-              borderWidth: isSelected ? 0 : 2,
+              borderWidth: isSelected ? 2 : 1,
               shadowColor: isSelected ? theme.colors.primary : '#000',
-              shadowOpacity: isSelected ? 0.3 : 0.04,
-              shadowRadius: isSelected ? 24 : 16,
-              overflow: 'hidden',
+              shadowOpacity: isSelected ? 0.15 : 0.05,
+              shadowRadius: isSelected ? 12 : 8,
+              elevation: isSelected ? 4 : 2,
             },
           ]}
         >
           {isSelected && (
-            <LinearGradient
-              colors={[theme.colors.primary, theme.colors.primarySoft || '#FFC499']}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 0 }}
-              style={StyleSheet.absoluteFill}
-            />
-          )}
-          <View style={styles.cardHeader}>
-            <View
-              style={[
-                styles.iconWrapper,
-                { backgroundColor: isSelected ? 'rgba(255,255,255,0.25)' : theme.colors.surfaceSecondary },
-              ]}
-            >
-              {icon(isSelected ? '#FFFFFF' : theme.colors.primary)}
+            <View style={styles.checkCircleBadge}>
+              <Check size={16} color="#FFFFFF" strokeWidth={3} />
             </View>
-            <View style={[styles.checkCircle, { opacity: isSelected ? 1 : 0, backgroundColor: '#4CAF50', borderRadius: 14, width: 28, height: 28, alignItems: 'center', justifyContent: 'center' }]}>
-               <Check size={16} color={'#FFFFFF'} strokeWidth={3} />
+          )}
+          
+          <View style={styles.cardContentRow}>
+            {/* Left Col: Text */}
+            <View style={styles.middleCol}>
+              <Typography variant="h3" weight="bold" style={styles.cardTitle}>
+                {title}
+              </Typography>
+              <Typography variant="bodySmall" color="textSecondary" style={styles.cardDescription}>
+                {description}
+              </Typography>
+            </View>
+
+            {/* Right Col: Image or Placeholder */}
+            <View style={styles.rightCol}>
+              {imageSource ? (
+                <Image source={imageSource} style={styles.cardImage} resizeMode="cover" />
+              ) : (
+                <View style={[styles.imagePlaceholder, { backgroundColor: isSelected ? '#FFFFFF' : theme.colors.surfaceSecondary }]} />
+              )}
             </View>
           </View>
-          <Typography variant="title" weight="bold" style={[styles.cardTitle, { color: isSelected ? '#FFFFFF' : theme.colors.textPrimary }]}>
-            {title}
-          </Typography>
-          <Typography variant="bodyMedium" style={[styles.cardDescription, { color: theme.colors.textSecondary }]}>
-            {description}
-          </Typography>
         </Animated.View>
       </Pressable>
     </Animated.View>
@@ -86,22 +76,18 @@ const RoleCard = ({ type, title, description, icon, isSelected, onPress, theme, 
 };
 
 export default function RoleSelectionScreen() {
-  const [selectedRole, setSelectedRole] = useState(null); // 'customer' | 'provider'
+  const [selectedRole, setSelectedRole] = useState(null);
   const router = useRouter();
-  const { setRole } = useAuth();
   const { theme } = useAppTheme();
   const insets = useSafeAreaInsets();
 
   const handleContinue = async () => {
     if (!selectedRole) return;
-    
     try {
       const { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== 'granted') {
-        console.log('Permission to access location was denied');
-      }
+      if (status !== 'granted') console.log('Permission denied');
     } catch (error) {
-      console.warn('Error requesting location permission:', error);
+      console.warn('Location error:', error);
     }
 
     if (selectedRole === 'customer') {
@@ -112,136 +98,216 @@ export default function RoleSelectionScreen() {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: 'transparent' }} edges={['top', 'bottom', 'left', 'right']}>
-      <StatusBar style="light" backgroundColor={theme.colors.primary} />
-      <View style={{ position: 'absolute', top: 0, left: 0, right: 0, height: insets.top, backgroundColor: theme.colors.primary, zIndex: 10 }} />
-      <View style={styles.headerBar}>
-        <TouchableOpacity onPress={() => router.back()} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
-          <ArrowLeft size={24} color={theme.colors.textPrimary} />
-        </TouchableOpacity>
-        <Typography variant="h3" weight="bold" style={styles.headerTitle}>Select Profile</Typography>
-        <View style={{ width: 24 }} />
-      </View>
-      <View style={[styles.container, { backgroundColor: 'transparent' }]}>
-        
-        <Animated.View entering={FadeInUp.duration(600).delay(100)} style={styles.header}>
-          <Typography variant="display" weight="bold" color="textPrimary" style={styles.title}>
-            Choose Your Profile
-          </Typography>
-          <Typography variant="body" color="textSecondary" style={styles.subtitle}>
-            Select how you'd like to use NEARIST today. You can always change this later in settings.
-          </Typography>
-        </Animated.View>
+    <View style={styles.container}>
+      <StatusBar style="light" />
+      
+      {/* Top Section with Image */}
+      <View style={styles.topSectionWrapper}>
+        <View style={styles.topSection}>
+          <Image
+            source={require('../../assets/images/screens/1.png')}
+            style={styles.topBackgroundImage}
+            resizeMode="cover"
+          />
+          <SafeAreaView style={styles.safeArea} edges={['top']}>
+            {/* Back Button */}
+            <TouchableOpacity onPress={() => router.back()} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }} style={[styles.backButtonContainer, { marginTop: 16, marginLeft: 24 }]}>
+              <BlurView intensity={50} tint="light" style={styles.backButton}>
+                <ArrowLeft size={20} color={theme.colors.textPrimary} />
+              </BlurView>
+            </TouchableOpacity>
 
-        <View style={styles.cardsContainer}>
-          <RoleCard
-            type="customer"
-            title="Customer"
-            description="Find trusted garages nearby, compare prices, and book services instantly."
-            icon={(color) => <User size={28} color={color} />}
-            isSelected={selectedRole === 'customer'}
-            onPress={() => setSelectedRole('customer')}
-            theme={theme}
-            delay={200}
-          />
-          <RoleCard
-            type="provider"
-            title="Service Provider"
-            description="List your garage, manage bookings, and connect with customers."
-            icon={(color) => <Wrench size={28} color={color} />}
-            isSelected={selectedRole === 'provider'}
-            onPress={() => setSelectedRole('provider')}
-            theme={theme}
-            delay={300}
-          />
+            {/* Header Text */}
+            <View style={styles.headerTextContainer}>
+              <Typography variant="display" weight="bold" style={[styles.titleText, { color: '#FFFFFF' }]}>
+                Choose Your
+              </Typography>
+              <Typography variant="display" weight="bold" style={[styles.titleText, { color: '#FFFFFF' }]}>
+                Profile
+              </Typography>
+              <Typography variant="bodyMedium" style={[styles.subtitleText, { color: 'rgba(255, 255, 255, 0.9)' }]}>
+                Select how you'd like to use{'\n'}Nearli today. You can always{'\n'}change this later in settings.
+              </Typography>
+            </View>
+          </SafeAreaView>
         </View>
+      </View>
 
-        <Animated.View entering={FadeInDown.duration(600).delay(400)} style={styles.footer}>
+      {/* Cards Section */}
+      <View style={styles.bottomSection}>
+        <RoleCard
+          title="Customer"
+          description="Find trusted garages nearby, compare prices, and book services instantly."
+          isSelected={selectedRole === 'customer'}
+          onPress={() => setSelectedRole('customer')}
+          theme={theme}
+          delay={100}
+          imageSource={require('../../assets/images/screens/customer.png')}
+        />
+        <RoleCard
+          title="Service Provider"
+          description="List your garage, manage bookings, and connect with customers."
+          isSelected={selectedRole === 'provider'}
+          onPress={() => setSelectedRole('provider')}
+          theme={theme}
+          delay={200}
+          imageSource={require('../../assets/images/screens/provider.png')}
+        />
+
+        {/* Footer */}
+        <Animated.View entering={FadeInDown.duration(600).delay(300)} style={[styles.footer, { paddingBottom: Math.max(insets.bottom, 24) }]}>
+          <View style={styles.trustBadge}>
+            <ShieldCheck size={16} color={theme.colors.primary} />
+            <Typography variant="caption" color="textSecondary" style={{ marginLeft: 6 }}>
+              Secure. Reliable. Always Here for You.
+            </Typography>
+          </View>
+
           <Button
             title="Continue"
             onPress={handleContinue}
             disabled={!selectedRole}
             fullWidth
             size="large"
+            rightIcon={<ArrowLeft size={20} color="#FFF" style={{ transform: [{ rotate: '180deg' }] }} />}
             style={styles.button}
             variant={selectedRole ? "primary" : "disabled"}
           />
         </Animated.View>
       </View>
-    </SafeAreaView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingHorizontal: 24,
-    paddingTop: 16,
+    backgroundColor: '#F5F5F7',
   },
-  headerBar: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 24,
-    paddingTop: 16,
-    paddingBottom: 16,
+  topSectionWrapper: {
+    height: 285,
+    backgroundColor: '#FFFFFF',
+    borderBottomLeftRadius: 40,
+    borderBottomRightRadius: 40,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.1,
+    shadowRadius: 12,
+    elevation: 8,
+    zIndex: 10,
   },
-  headerTitle: {
-    fontSize: 18,
-  },
-  header: {
-    marginBottom: 40,
-  },
-  title: {
-    fontSize: 32,
-    marginBottom: 12,
-  },
-  subtitle: {
-    lineHeight: 24,
-  },
-  cardsContainer: {
+  topSection: {
     flex: 1,
-    gap: 20,
+    borderBottomLeftRadius: 20,
+    borderBottomRightRadius: 20,
+    overflow: 'hidden',
   },
-  cardWrapper: {
-    marginBottom: 8,
+  topBackgroundImage: {
+    position: 'absolute',
+    top: -40,
+    left: 0,
+    width: '100%',
+    height: height * 0.5, // Scale image up
   },
-  card: {
-    borderWidth: 2,
-    borderRadius: 24,
-    padding: 24,
-    minHeight: 160,
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.04,
-    shadowRadius: 16,
-    elevation: 3,
-    position: 'relative',
+  safeArea: {
+    flex: 1,
   },
-  cardHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
-    marginBottom: 20,
+  backButtonContainer: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    overflow: 'hidden',
+    borderWidth: 1,
+    borderColor: 'rgba(0, 0, 0, 0.05)',
+    backgroundColor: 'rgba(0, 0, 0, 0.03)',
   },
-  iconWrapper: {
-    width: 56,
-    height: 56,
-    borderRadius: 28,
+  backButton: {
+    flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  checkCircle: {
-    padding: 4,
+  headerTextContainer: {
+    paddingHorizontal: 24,
+    paddingTop: 16,
+  },
+  titleText: {
+    fontSize: 32,
+    lineHeight: 38,
+  },
+  subtitleText: {
+    marginTop: 12,
+    lineHeight: 20,
+    fontSize: 13,
+    maxWidth: '75%',
+  },
+  bottomSection: {
+    flex: 1,
+    paddingHorizontal: 20,
+    paddingTop: 24,
+  },
+  cardWrapper: {
+    marginBottom: 16,
+  },
+  card: {
+    borderRadius: 24,
+    padding: 16,
+    paddingVertical: 24,
+    minHeight: 140,
+    position: 'relative',
+  },
+  checkCircleBadge: {
+    position: 'absolute',
+    top: -8,
+    right: -8,
+    backgroundColor: '#4CAF50',
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    alignItems: 'center',
+    justifyContent: 'center',
+    zIndex: 10,
+    borderWidth: 2,
+    borderColor: '#FFFFFF',
+  },
+  cardContentRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  middleCol: {
+    flex: 1,
+    paddingRight: 8,
   },
   cardTitle: {
-    fontSize: 20,
-    marginBottom: 8,
+    fontSize: 18,
+    marginBottom: 6,
   },
   cardDescription: {
-    lineHeight: 22,
+    lineHeight: 18,
+    fontSize: 12,
+  },
+  rightCol: {
+    width: 120,
+    height: 100,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  cardImage: {
+    width: '100%',
+    height: '100%',
+  },
+  imagePlaceholder: {
+    width: '100%',
+    height: '100%',
+    borderRadius: 12,
   },
   footer: {
-    paddingBottom: 40,
+    marginTop: 'auto',
+  },
+  trustBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 16,
   },
   button: {
     height: 56,
