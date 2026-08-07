@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "NEARIST",
-    "slug": "NEARIST",
+    "slug": "Nearli",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -51,6 +51,7 @@
       "eas": {
         "projectId": "dafd5637-2d5c-42f7-99cb-6a075df634dd"
       }
-    }
+    },
+    "owner": "sunasara_alkama"
   }
 }
