@@ -1,7 +1,7 @@
 import * as ImagePicker from 'expo-image-picker';
 import { LinearGradient } from 'expo-linear-gradient';
 import * as Location from 'expo-location';
-import { useRouter } from 'expo-router';
+import { useRouter, useLocalSearchParams } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { ArrowLeft, Check, CheckCircle2, ChevronRight, Circle, Map, Upload } from 'lucide-react-native';
 import { useState } from 'react';
@@ -9,6 +9,7 @@ import { Image, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Touchabl
 import Animated, { FadeInRight, FadeOutLeft } from 'react-native-reanimated';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { BlurView } from 'expo-blur';
+import Svg, { Circle as SvgCircle } from 'react-native-svg';
 import { Button } from '../../src/components/ui/Button';
 import { TextInput } from '../../src/components/ui/TextInput';
 import { Typography } from '../../src/components/ui/Typography';
@@ -31,9 +32,31 @@ const generateTimeSlots = () => {
 };
 const TIME_SLOTS = generateTimeSlots();
 
+const TIME_GROUPS = {
+  Morning: TIME_SLOTS.filter(t => {
+     const isAM = t.includes('AM');
+     const h = parseInt(t.split(':')[0], 10);
+     return isAM && (h >= 5 && h !== 12);
+  }),
+  Afternoon: TIME_SLOTS.filter(t => {
+     const isPM = t.includes('PM');
+     const h = parseInt(t.split(':')[0], 10);
+     return isPM && (h === 12 || (h >= 1 && h < 5));
+  }),
+  Evening: TIME_SLOTS.filter(t => {
+     const isPM = t.includes('PM');
+     const isAM = t.includes('AM');
+     const h = parseInt(t.split(':')[0], 10);
+     if(isPM && (h >= 5 && h !== 12)) return true;
+     if(isAM && (h === 12 || h < 5)) return true;
+     return false;
+  })
+};
+
 export default function ProviderSetupWizard() {
   const { theme } = useAppTheme();
   const router = useRouter();
+  const { phone } = useLocalSearchParams();
   const { login } = useAuth();
   const insets = useSafeAreaInsets();
 
@@ -45,7 +68,7 @@ export default function ProviderSetupWizard() {
   const [formData, setFormData] = useState({
     businessName: '',
     ownerName: '',
-    phone: '',
+    phone: phone || '+91 9876543210',
     whatsapp: '',
     email: '',
     description: '',
@@ -67,7 +90,8 @@ export default function ProviderSetupWizard() {
   });
 
   const [timePickerVisible, setTimePickerVisible] = useState(false);
-  const [timePickerTarget, setTimePickerTarget] = useState('openTime');
+  const [timePickerTarget, setTimePickerTarget] = useState('openTime'); // 'openTime' or 'closeTime'
+  const [timeCategory, setTimeCategory] = useState('Morning');
 
   const pickImage = async (type) => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -135,9 +159,9 @@ export default function ProviderSetupWizard() {
   const renderStep1 = () => (
     <Animated.View entering={FadeInRight} exiting={FadeOutLeft} style={styles.stepContainer}>
       <Typography variant="h3" weight="bold" style={styles.stepTitle}>Basic Information</Typography>
+      <TextInput label="Verified Phone Number" value={formData.phone} editable={false} containerStyle={{ opacity: 0.6 }} />
       <TextInput label="Business Name *" placeholder="e.g. Acme Auto" value={formData.businessName} onChangeText={t => setFormData({ ...formData, businessName: t })} />
       <TextInput label="Owner Name *" placeholder="e.g. John Doe" value={formData.ownerName} onChangeText={t => setFormData({ ...formData, ownerName: t })} />
-      <TextInput label="Phone Number" placeholder="e.g. +91 9999999999" value={formData.phone} onChangeText={t => setFormData({ ...formData, phone: t })} keyboardType="phone-pad" />
       <TextInput label="WhatsApp" placeholder="e.g. +91 9999999999" value={formData.whatsapp} onChangeText={t => setFormData({ ...formData, whatsapp: t })} keyboardType="phone-pad" />
       <TextInput label="Email" placeholder="business@example.com" value={formData.email} onChangeText={t => setFormData({ ...formData, email: t })} keyboardType="email-address" autoCapitalize="none" />
       <TextInput label="Business Description" placeholder="Describe your services" value={formData.description} onChangeText={t => setFormData({ ...formData, description: t })} multiline />
@@ -157,28 +181,19 @@ export default function ProviderSetupWizard() {
             <TouchableOpacity
               key={cat}
               style={[styles.categoryCard, {
-                borderColor: isSelected ? theme.colors.primary : theme.colors.border,
-                backgroundColor: theme.colors.surface,
-                borderWidth: isSelected ? 0 : 2,
-                overflow: 'hidden'
+                borderColor: isSelected ? theme.colors.primary : 'transparent',
+                backgroundColor: isSelected ? (theme.colors.primarySoft || '#FFE8D6') : theme.colors.surfaceSecondary,
+                borderWidth: 1,
               }]}
               onPress={() => setFormData({ ...formData, category: cat })}
             >
-              {isSelected && (
-                <LinearGradient
-                  colors={[theme.colors.primary, theme.colors.primarySoft || '#FFC499']}
-                  start={{ x: 0, y: 0 }}
-                  end={{ x: 1, y: 0 }}
-                  style={StyleSheet.absoluteFill}
-                />
-              )}
               <View style={styles.categoryRow}>
                 {isSelected ? (
-                  <View style={{ backgroundColor: '#4CAF50', borderRadius: 12, width: 24, height: 24, alignItems: 'center', justifyContent: 'center' }}>
-                    <Check size={16} color="#FFFFFF" strokeWidth={3} />
-                  </View>
-                ) : <Circle color={theme.colors.border} />}
-                <Typography variant="h4" weight={isSelected ? "bold" : "medium"} style={{ marginLeft: 12, color: isSelected ? '#FFFFFF' : theme.colors.textPrimary, zIndex: 1 }}>
+                  <Check size={20} color={theme.colors.primary} strokeWidth={3} />
+                ) : (
+                  <Circle size={20} color={theme.colors.textMuted} />
+                )}
+                <Typography variant="h4" weight={isSelected ? "bold" : "medium"} style={{ marginLeft: 12, color: isSelected ? theme.colors.primary : theme.colors.textPrimary }}>
                   {cat}
                 </Typography>
               </View>
@@ -218,21 +233,12 @@ export default function ProviderSetupWizard() {
                 key={opt}
                 onPress={() => toggleService(opt)}
                 style={[styles.pill, {
-                  backgroundColor: theme.colors.surfaceSecondary,
+                  backgroundColor: isSelected ? (theme.colors.primarySoft || '#FFE8D6') : theme.colors.surfaceSecondary,
                   borderColor: isSelected ? theme.colors.primary : 'transparent',
-                  borderWidth: isSelected ? 0 : 1,
-                  overflow: 'hidden'
+                  borderWidth: 1,
                 }]}
               >
-                {isSelected && (
-                  <LinearGradient
-                    colors={[theme.colors.primary, theme.colors.primarySoft || '#FFC499']}
-                    start={{ x: 0, y: 0 }}
-                    end={{ x: 1, y: 0 }}
-                    style={StyleSheet.absoluteFill}
-                  />
-                )}
-                <Typography style={{ color: isSelected ? '#FFFFFF' : theme.colors.textPrimary, zIndex: 1 }} weight={isSelected ? "bold" : "regular"}>{opt}</Typography>
+                <Typography style={{ color: isSelected ? theme.colors.primary : theme.colors.textPrimary }} weight={isSelected ? "bold" : "regular"}>{opt}</Typography>
               </TouchableOpacity>
             )
           })}
@@ -292,16 +298,13 @@ export default function ProviderSetupWizard() {
                 <TouchableOpacity
                   key={d.id}
                   onPress={() => toggleDay(d.id)}
-                  style={{
-                    backgroundColor: isSelected ? theme.colors.primary : theme.colors.surfaceSecondary,
+                  style={[styles.pill, {
+                    backgroundColor: isSelected ? (theme.colors.primarySoft || '#FFE8D6') : theme.colors.surfaceSecondary,
+                    borderColor: isSelected ? theme.colors.primary : 'transparent',
                     borderWidth: 1,
-                    borderColor: isSelected ? theme.colors.primary : theme.colors.border,
-                    borderRadius: 12,
-                    paddingHorizontal: 16,
-                    paddingVertical: 10,
-                  }}
+                  }]}
                 >
-                  <Typography color={isSelected ? 'white' : 'textPrimary'} weight={isSelected ? "bold" : "medium"} variant="bodyMedium">{d.id}</Typography>
+                  <Typography color={isSelected ? 'primary' : 'textPrimary'} weight={isSelected ? "bold" : "regular"} variant="bodyMedium">{d.id}</Typography>
                 </TouchableOpacity>
               )
             })}
@@ -441,119 +444,330 @@ export default function ProviderSetupWizard() {
     }
   }
 
-  const progressPercent = (step / totalSteps) * 100;
+  const progressPercent = step / totalSteps;
+  const size = 72;
+  const strokeWidth = 4;
+  const radius = (size - strokeWidth) / 2;
+  const circumference = 2 * Math.PI * radius;
+  const strokeDashoffset = circumference - (circumference * progressPercent);
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: 'transparent' }} edges={['top', 'bottom', 'left', 'right']}>
-      <StatusBar style="light" backgroundColor={theme.colors.primary} />
-      <View style={{ position: 'absolute', top: 0, left: 0, right: 0, height: insets.top, backgroundColor: theme.colors.primary, zIndex: 10 }} />
-
-      <View style={[styles.headerBar, { backgroundColor: theme.colors.background }]}>
-        <TouchableOpacity onPress={handleBack} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }} style={styles.backButtonContainer}>
-          <BlurView intensity={50} tint="light" style={styles.backButton}>
-            <ArrowLeft size={20} color={theme.colors.textPrimary} />
-          </BlurView>
-        </TouchableOpacity>
-        <Typography variant="h3" weight="bold" style={styles.headerTitle}>Provider Setup</Typography>
-        <View style={{ alignItems: 'center' }}><Typography variant="bodyMedium" weight="bold" color="primary">{step} / {totalSteps}</Typography></View>
+    <View style={styles.mainContainer}>
+      <StatusBar style="dark" backgroundColor="transparent" />
+      
+      {/* Top Image Background */}
+      <View style={StyleSheet.absoluteFillObject}>
+        <Image
+          source={require('../../assets/images/screens/provider-form.png')}
+          style={{ width: '100%', height: 400, opacity: 0.8 }}
+          resizeMode="cover"
+        />
+        <LinearGradient
+          colors={['transparent', theme.colors.background]}
+          style={{ position: 'absolute', top: 200, left: 0, right: 0, height: 200 }}
+        />
       </View>
 
-      <View style={[styles.progressContainer, { backgroundColor: theme.colors.surfaceSecondary }]}>
-        <View style={[styles.progressBar, { width: `${progressPercent}%`, backgroundColor: theme.colors.primary }]} />
-      </View>
+      <SafeAreaView style={styles.safeArea} edges={['top', 'bottom']}>
+        {/* Sticky Header Section */}
+        <View style={styles.headerSection}>
+          
+          {/* Top Row: Navigation */}
+          <View style={styles.headerTopRow}>
+            <TouchableOpacity 
+              onPress={handleBack} 
+              hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+              style={styles.blurBadgeContainer}
+            >
+              <BlurView intensity={50} tint="light" style={styles.blurBadge}>
+                <ArrowLeft size={20} color={theme.colors.textPrimary} />
+              </BlurView>
+            </TouchableOpacity>
 
-      <KeyboardAvoidingView
-        style={[styles.container, { backgroundColor: theme.colors.background }]}
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-        keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
-      >
-        <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.scroll} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
-
-          {renderCurrentStep()}
-
-          <View style={styles.footer}>
-            {step === totalSteps ? (
-              <>
-                <Button title="Save Draft" variant="outline" style={{ marginBottom: 12 }} fullWidth onPress={() => { }} />
-                <Button title="Submit Application" variant="primary" onPress={handleSubmit} loading={loading} fullWidth size="large" />
-              </>
-            ) : (
-              <Button
-                title="Next Step"
-                variant="primary"
-                onPress={handleNext}
-                fullWidth
-                size="large"
-                rightIcon={<ChevronRight color="#FFFFFF" size={20} />}
-                disabled={step === 2 && !formData.category}
-              />
+            {step < totalSteps && (
+              <TouchableOpacity 
+                onPress={handleNext} 
+                hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+                style={styles.blurBadgeContainer}
+              >
+                <BlurView intensity={50} tint="light" style={styles.blurBadge}>
+                  <ChevronRight size={20} color={theme.colors.textPrimary} />
+                </BlurView>
+              </TouchableOpacity>
             )}
           </View>
-        </ScrollView>
-      </KeyboardAvoidingView>
+
+          {/* Title Row */}
+          <View style={styles.headerContentRow}>
+            <View style={styles.headerTextCol}>
+              <Typography variant="h3" weight="bold" style={styles.titleText}>
+                Complete Your
+              </Typography>
+              <Typography variant="h3" weight="bold" style={[styles.titleText, { color: theme.colors.primary }]}>
+                Provider Profile
+              </Typography>
+              <Typography variant="bodySmall" color="textSecondary" style={styles.subtitleText}>
+                Setup your details to{'\n'}start getting jobs.
+              </Typography>
+            </View>
+            
+            <View style={styles.headerRightCol}>
+              <View style={[styles.stepCircleContainer, step === totalSteps && { backgroundColor: '#4CAF50' }]}>
+                
+                {/* Background / Blur Layer */}
+                {step !== totalSteps && (
+                  <View style={[StyleSheet.absoluteFillObject, { borderRadius: size / 2, overflow: 'hidden' }]}>
+                    <BlurView intensity={80} tint="light" style={styles.stepCircleBlur} />
+                  </View>
+                )}
+
+                {/* SVG Progress Ring */}
+                {step !== totalSteps && (
+                  <Svg width={size} height={size} style={{ position: 'absolute' }}>
+                    <SvgCircle stroke={theme.colors.border} fill="none" cx={size / 2} cy={size / 2} r={radius} strokeWidth={strokeWidth} />
+                    <SvgCircle
+                      stroke={theme.colors.primary} fill="none" cx={size / 2} cy={size / 2} r={radius}
+                      strokeWidth={strokeWidth} strokeDasharray={circumference} strokeDashoffset={strokeDashoffset}
+                      strokeLinecap="round" rotation="-90" originX={size / 2} originY={size / 2}
+                    />
+                  </Svg>
+                )}
+
+                {/* Content Layer */}
+                <View style={[StyleSheet.absoluteFillObject, { alignItems: 'center', justifyContent: 'center' }]}>
+                  {step === totalSteps ? (
+                    <Check size={36} color="#FFFFFF" strokeWidth={3} />
+                  ) : (
+                    <Typography variant="h3" weight="bold" style={{ color: theme.colors.primary }}>
+                      {step}<Typography variant="bodyLarge" weight="bold" color="textSecondary">/{totalSteps}</Typography>
+                    </Typography>
+                  )}
+                </View>
+
+              </View>
+            </View>
+          </View>
+
+        </View>
+
+
+
+        {/* Scrollable White Form Section */}
+        <KeyboardAvoidingView
+          style={styles.formSection}
+          behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+          keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
+        >
+          <View style={[styles.whiteContainer, { backgroundColor: theme.colors.background }]}>
+            <ScrollView 
+              contentContainerStyle={styles.scrollContent} 
+              showsVerticalScrollIndicator={false}
+              keyboardShouldPersistTaps="handled"
+            >
+              {renderCurrentStep()}
+
+              <View style={styles.footer}>
+                {step === totalSteps ? (
+                  <>
+                    <Button title="Save Draft" variant="outline" style={{ marginBottom: 12 }} fullWidth onPress={() => { }} />
+                    <Button title="Submit Application" variant="primary" onPress={handleSubmit} loading={loading} fullWidth size="large" />
+                  </>
+                ) : (
+                  <Button
+                    title="Continue"
+                    variant="primary"
+                    onPress={handleNext}
+                    fullWidth
+                    size="large"
+                    disabled={step === 2 && !formData.category}
+                  />
+                )}
+              </View>
+            </ScrollView>
+          </View>
+        </KeyboardAvoidingView>
+
+      </SafeAreaView>
 
       {/* Time Picker Modal */}
       {timePickerVisible && (
-        <View style={StyleSheet.absoluteFillObject}>
+        <View style={[StyleSheet.absoluteFillObject, { zIndex: 100 }]}>
           <TouchableOpacity
             style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.5)' }}
             activeOpacity={1}
             onPress={() => setTimePickerVisible(false)}
           />
           <View style={[styles.timePickerSheet, { backgroundColor: theme.colors.surface }]}>
+            
             <View style={styles.timePickerHeader}>
               <Typography variant="h4" weight="bold">
-                Select {timePickerTarget === 'openTime' ? 'Opening' : 'Closing'} Time
+                {timePickerTarget === 'openTime' ? 'Opening Time' : 'Closing Time'}
               </Typography>
               <TouchableOpacity onPress={() => setTimePickerVisible(false)}>
-                <Typography color="primary" weight="bold">Done</Typography>
+                <Typography color="textSecondary" weight="medium">Cancel</Typography>
               </TouchableOpacity>
             </View>
-            <ScrollView style={{ maxHeight: 300 }}>
-              {TIME_SLOTS.map(time => (
-                <TouchableOpacity
-                  key={time}
-                  style={[styles.timeSlot, { borderBottomColor: theme.colors.border }]}
-                  onPress={() => {
-                    setFormData({ ...formData, [timePickerTarget]: time });
-                    setTimePickerVisible(false);
-                  }}
-                >
-                  <Typography
-                    variant="h4"
-                    color={formData[timePickerTarget] === time ? 'primary' : 'textPrimary'}
-                    weight={formData[timePickerTarget] === time ? 'bold' : 'regular'}
+
+            {/* Category Tabs */}
+            <View style={{ flexDirection: 'row', paddingHorizontal: 24, marginBottom: 16 }}>
+              {['Morning', 'Afternoon', 'Evening'].map(cat => {
+                const isActive = timeCategory === cat;
+                return (
+                  <TouchableOpacity
+                    key={cat}
+                    onPress={() => setTimeCategory(cat)}
+                    style={{
+                      flex: 1,
+                      paddingVertical: 10,
+                      alignItems: 'center',
+                      borderBottomWidth: 2,
+                      borderBottomColor: isActive ? theme.colors.primary : 'transparent',
+                    }}
                   >
-                    {time}
-                  </Typography>
-                  {formData[timePickerTarget] === time && <Check color={theme.colors.primary} size={20} />}
-                </TouchableOpacity>
-              ))}
+                    <Typography 
+                      variant="bodySmall" 
+                      weight={isActive ? "bold" : "medium"} 
+                      color={isActive ? 'primary' : 'textSecondary'}
+                    >
+                      {cat}
+                    </Typography>
+                  </TouchableOpacity>
+                )
+              })}
+            </View>
+
+            <ScrollView 
+              style={{ maxHeight: 250 }} 
+              contentContainerStyle={{ paddingHorizontal: 24, paddingBottom: 24, flexDirection: 'row', flexWrap: 'wrap', gap: 12 }}
+              showsVerticalScrollIndicator={false}
+            >
+              {TIME_GROUPS[timeCategory].map(time => {
+                const isSelected = formData[timePickerTarget] === time;
+                return (
+                  <TouchableOpacity
+                    key={time}
+                    style={{
+                      width: '30%',
+                      backgroundColor: isSelected ? theme.colors.primary : theme.colors.surfaceSecondary,
+                      borderRadius: 12,
+                      paddingVertical: 12,
+                      alignItems: 'center',
+                    }}
+                    onPress={() => setFormData({ ...formData, [timePickerTarget]: time })}
+                  >
+                    <Typography
+                      variant="bodyMedium"
+                      color={isSelected ? 'white' : 'textPrimary'}
+                      weight={isSelected ? 'medium' : 'regular'}
+                    >
+                      {time}
+                    </Typography>
+                  </TouchableOpacity>
+                );
+              })}
             </ScrollView>
+            
+            <View style={{ paddingHorizontal: 24, paddingTop: 16, paddingBottom: Platform.OS === 'ios' ? 10 : 0 }}>
+               <Button title="Apply Time" variant="primary" onPress={() => setTimePickerVisible(false)} fullWidth />
+            </View>
           </View>
         </View>
       )}
-
-    </SafeAreaView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1 },
-  headerBar: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 24, paddingTop: 16, paddingBottom: 16 },
-  backButtonContainer: { width: 36, height: 36, borderRadius: 18, overflow: 'hidden', borderWidth: 1, borderColor: 'rgba(0,0,0,0.05)', backgroundColor: 'rgba(0,0,0,0.03)' },
-  backButton: { flex: 1, alignItems: 'center', justifyContent: 'center' },
-  headerTitle: { fontSize: 18 },
-  progressContainer: { height: 4, width: '100%' },
-  progressBar: { height: '100%' },
-  scroll: { flexGrow: 1, paddingHorizontal: 24, paddingBottom: 40 },
-  stepContainer: { flex: 1, paddingTop: 32 },
+  mainContainer: { flex: 1 },
+  safeArea: { flex: 1 },
+  headerSection: {
+    paddingHorizontal: 20,
+    paddingTop: 8,
+    paddingBottom: 16,
+  },
+  headerTopRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+  blurBadgeContainer: {
+    height: 36,
+    borderRadius: 18,
+    overflow: 'hidden',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.5)',
+    justifyContent: 'center',
+  },
+  blurBadge: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    minWidth: 36,
+  },
+  headerContentRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  headerTextCol: {
+    flex: 1,
+    paddingRight: 12,
+  },
+  titleText: {
+    fontSize: 22,
+    lineHeight: 28,
+  },
+  subtitleText: {
+    marginTop: 6,
+    lineHeight: 18,
+  },
+  headerRightCol: {
+    width: 80,
+    alignItems: 'flex-end',
+    justifyContent: 'center',
+  },
+  stepCircleContainer: {
+    width: 72,
+    height: 72,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 36,
+    overflow: 'hidden',
+  },
+  stepCircleBlur: {
+    width: '100%',
+    height: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  formSection: {
+    flex: 1,
+  },
+  whiteContainer: {
+    flex: 1,
+    borderTopLeftRadius: 32,
+    borderTopRightRadius: 32,
+    overflow: 'hidden',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: -4 },
+    shadowOpacity: 0.05,
+    shadowRadius: 12,
+    elevation: 10,
+  },
+  scrollContent: {
+    paddingHorizontal: 24,
+    paddingTop: 32,
+    paddingBottom: 40,
+    flexGrow: 1,
+  },
+  stepContainer: { flex: 1, paddingTop: 0 },
   stepTitle: { marginBottom: 24 },
   footer: { paddingTop: 32, marginTop: 'auto' },
-  categoryCard: { borderWidth: 2, borderRadius: 16, padding: 20, marginBottom: 16 },
+  categoryCard: { borderRadius: 16, padding: 16, marginBottom: 12 },
   categoryRow: { flexDirection: 'row', alignItems: 'center' },
   pillContainer: { flexDirection: 'row', flexWrap: 'wrap', gap: 12 },
-  pill: { paddingHorizontal: 16, paddingVertical: 10, borderRadius: 24, borderWidth: 1 },
+  pill: { paddingHorizontal: 16, paddingVertical: 10, borderRadius: 24 },
   mapPlaceholder: { height: 200, borderRadius: 16, alignItems: 'center', justifyContent: 'center', marginBottom: 24 },
   hoursBox: { padding: 32, borderRadius: 16, alignItems: 'center', justifyContent: 'center' },
   photoGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 16 },
@@ -565,7 +779,6 @@ const styles = StyleSheet.create({
   divider: { height: 1, backgroundColor: 'rgba(0,0,0,0.05)', marginBottom: 20 },
   reviewSection: { marginBottom: 16 },
   timeBox: { flex: 1, padding: 16, borderRadius: 16, borderWidth: 1, alignItems: 'center', justifyContent: 'center' },
-  timePickerSheet: { position: 'absolute', bottom: 0, left: 0, right: 0, borderTopLeftRadius: 24, borderTopRightRadius: 24, paddingBottom: 40, paddingTop: 16 },
-  timePickerHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 24, paddingBottom: 16, borderBottomWidth: 1, borderBottomColor: 'rgba(0,0,0,0.05)' },
-  timeSlot: { paddingVertical: 16, paddingHorizontal: 24, borderBottomWidth: 1, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }
+  timePickerSheet: { position: 'absolute', bottom: 0, left: 0, right: 0, borderTopLeftRadius: 32, borderTopRightRadius: 32, paddingBottom: 32, paddingTop: 24 },
+  timePickerHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 24, paddingBottom: 20 },
 });

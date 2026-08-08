@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { View, StyleSheet, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useRouter } from 'expo-router';
+import { useRouter, useLocalSearchParams } from 'expo-router';
 import { Check } from 'lucide-react-native';
 import Animated, { FadeInDown, FadeIn, withSpring, useAnimatedStyle, useSharedValue, withDelay } from 'react-native-reanimated';
 import { useAppTheme } from '../../src/hooks/useAppTheme';
@@ -10,6 +10,7 @@ import { Button } from '../../src/components/ui/Button';
 
 export default function SuccessScreen() {
   const router = useRouter();
+  const { phone } = useLocalSearchParams();
   const { theme } = useAppTheme();
   
   const scale = useSharedValue(0);
@@ -56,7 +57,7 @@ export default function SuccessScreen() {
         <Button
           title="Continue"
           variant="primary"
-          onPress={() => router.replace('/(auth)/role')}
+          onPress={() => router.replace({ pathname: '/(auth)/role', params: { phone } })}
           fullWidth
           style={styles.button}
         />

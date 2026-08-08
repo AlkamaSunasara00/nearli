@@ -82,7 +82,7 @@ export default function OtpScreen() {
       setLoading(true);
       await authService.verifyOTP(phone, otpToVerify);
       // On success, navigate to the celebration screen instead of directly to role
-      router.replace('/(auth)/success');
+      router.replace({ pathname: '/(auth)/success', params: { phone } });
     } catch (err) {
       if (err.message?.includes('expired')) {
         setError('Code expired. Request a new OTP.');

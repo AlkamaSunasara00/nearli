@@ -1,11 +1,11 @@
 import * as ImagePicker from 'expo-image-picker';
 import { LinearGradient } from 'expo-linear-gradient';
 import * as Location from 'expo-location';
-import { useRouter } from 'expo-router';
+import { useRouter, useLocalSearchParams } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import { ArrowLeft, Camera, MapPin, User, Mail, Users, Plus, ShieldCheck, Lock, Star, EyeOff, Navigation, Check } from 'lucide-react-native';
+import { ArrowLeft, Camera, MapPin, User, Mail, Users, Plus, ShieldCheck, Lock, Star, EyeOff, Navigation, Check, Phone } from 'lucide-react-native';
 import { useState } from 'react';
-import { Image, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Image, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, TouchableOpacity, View, ActivityIndicator } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { BlurView } from 'expo-blur';
 import { Button } from '../../src/components/ui/Button';
@@ -17,12 +17,16 @@ import { useAuth } from '../../src/hooks/useAuth';
 export default function CustomerRegistrationScreen() {
   const { theme } = useAppTheme();
   const router = useRouter();
+  const { phone } = useLocalSearchParams();
   const { login } = useAuth();
   const insets = useSafeAreaInsets();
   const [loading, setLoading] = useState(false);
   const [locationLoading, setLocationLoading] = useState(false);
+  const [acceptedTerms, setAcceptedTerms] = useState(false);
+  const [locationMode, setLocationMode] = useState('current');
 
   const [formData, setFormData] = useState({
+    phone: phone || '+91 9876543210',
     fullName: '',
     email: '',
     gender: '',
@@ -88,7 +92,7 @@ export default function CustomerRegistrationScreen() {
       <View style={[styles.labelIconWrapper, { backgroundColor: theme.colors.primarySoft || '#FFE8D6' }]}>
         <Icon size={16} color={theme.colors.primary} />
       </View>
-      <Typography variant="bodyMedium" weight="bold" style={styles.labelText}>
+      <Typography variant="bodySmall" weight="bold" style={styles.labelText}>
         {label} {required && <Typography style={{ color: theme.colors.danger }}>*</Typography>}
       </Typography>
     </View>
@@ -98,12 +102,18 @@ export default function CustomerRegistrationScreen() {
     <View style={styles.mainContainer}>
       <StatusBar style="dark" backgroundColor="transparent" />
       
-      {/* Top Gradient Background */}
-      <LinearGradient
-        colors={['#FFD1B3', '#FFF1E6', theme.colors.background]}
-        locations={[0, 0.4, 0.7]}
-        style={StyleSheet.absoluteFillObject}
-      />
+      {/* Top Image Background */}
+      <View style={StyleSheet.absoluteFillObject}>
+        <Image
+          source={require('../../assets/images/screens/provider-form.png')}
+          style={{ width: '100%', height: 400, opacity: 0.8 }}
+          resizeMode="cover"
+        />
+        <LinearGradient
+          colors={['transparent', theme.colors.background]}
+          style={{ position: 'absolute', top: 200, left: 0, right: 0, height: 200 }}
+        />
+      </View>
 
       <SafeAreaView style={styles.safeArea} edges={['top', 'bottom']}>
         {/* Sticky Header Section */}
@@ -187,6 +197,14 @@ export default function CustomerRegistrationScreen() {
               </View>
 
               <View style={styles.formFields}>
+                {/* Verified Phone */}
+                <LabelWithIcon icon={Phone} label="Verified Phone Number" />
+                <TextInput
+                  value={formData.phone}
+                  editable={false}
+                  containerStyle={[styles.inputMargin, { opacity: 0.6 }]}
+                />
+
                 {/* Full Name */}
                 <LabelWithIcon icon={User} label="Full Name" required={true} />
                 <TextInput
@@ -207,7 +225,7 @@ export default function CustomerRegistrationScreen() {
                   containerStyle={styles.inputMarginReduced}
                 />
                 <View style={styles.hintRow}>
-                  <Navigation size={12} color={theme.colors.textMuted} />
+                  <Navigation size={10} color={theme.colors.textMuted} />
                   <Typography variant="caption" color="textMuted" style={styles.hintText}>
                     Useful for invoices and future features.
                   </Typography>
@@ -232,10 +250,10 @@ export default function CustomerRegistrationScreen() {
                         ]}
                         onPress={() => setFormData({ ...formData, gender: opt.label })}
                       >
-                        <IconComp size={16} color={isSelected ? theme.colors.primary : theme.colors.textSecondary} />
+                        <IconComp size={14} color={isSelected ? theme.colors.primary : theme.colors.textSecondary} />
                         <Typography
                           variant="bodySmall"
-                          weight={isSelected ? "bold" : "medium"}
+                          weight="regular"
                           style={{ color: isSelected ? theme.colors.primary : theme.colors.textSecondary, marginLeft: 6 }}
                         >
                           {opt.label}
@@ -247,29 +265,91 @@ export default function CustomerRegistrationScreen() {
 
                 {/* Location */}
                 <LabelWithIcon icon={MapPin} label="Current Location" />
-                <TouchableOpacity 
-                  style={[
-                    styles.locationButton, 
-                    { 
-                      backgroundColor: theme.colors.primarySoft || '#FFE8D6', 
-                      borderColor: theme.colors.primary, 
-                      borderWidth: 1 
-                    }
-                  ]}
-                  onPress={getLocation}
-                >
-                  <View style={styles.locationButtonLeft}>
-                    <Navigation size={20} color={theme.colors.primary} />
+                
+                <View style={styles.locationModeRow}>
+                  <TouchableOpacity 
+                    style={[
+                      styles.locationModeBtn, 
+                      locationMode === 'current' 
+                        ? { backgroundColor: theme.colors.primarySoft || '#FFE8D6', borderColor: theme.colors.primary } 
+                        : { backgroundColor: theme.colors.surfaceSecondary, borderColor: 'transparent' }
+                    ]}
+                    onPress={() => {
+                      setLocationMode('current');
+                      setFormData({ ...formData, locationText: '' });
+                    }}
+                  >
+                    <Navigation size={14} color={locationMode === 'current' ? theme.colors.primary : theme.colors.textSecondary} />
                     <Typography 
-                      variant="bodyMedium" 
-                      weight="bold" 
-                      style={{ color: theme.colors.primary, marginLeft: 12 }}
+                      variant="caption" 
+                      weight={locationMode === 'current' ? "bold" : "medium"}
+                      style={{ color: locationMode === 'current' ? theme.colors.primary : theme.colors.textSecondary, marginLeft: 6 }}
                     >
-                      {formData.locationText || "Use Current Location"}
+                      Auto Detect
                     </Typography>
-                  </View>
-                  <ArrowLeft size={16} color={theme.colors.primary} style={{ transform: [{ rotate: '180deg' }] }} />
-                </TouchableOpacity>
+                  </TouchableOpacity>
+
+                  <TouchableOpacity 
+                    style={[
+                      styles.locationModeBtn, 
+                      locationMode === 'manual' 
+                        ? { backgroundColor: theme.colors.primarySoft || '#FFE8D6', borderColor: theme.colors.primary } 
+                        : { backgroundColor: theme.colors.surfaceSecondary, borderColor: 'transparent' }
+                    ]}
+                    onPress={() => {
+                      setLocationMode('manual');
+                      setFormData({ ...formData, locationText: '' });
+                    }}
+                  >
+                    <MapPin size={14} color={locationMode === 'manual' ? theme.colors.primary : theme.colors.textSecondary} />
+                    <Typography 
+                      variant="caption" 
+                      weight={locationMode === 'manual' ? "bold" : "medium"}
+                      style={{ color: locationMode === 'manual' ? theme.colors.primary : theme.colors.textSecondary, marginLeft: 6 }}
+                    >
+                      Enter Manually
+                    </Typography>
+                  </TouchableOpacity>
+                </View>
+
+                {locationMode === 'current' ? (
+                  <TouchableOpacity 
+                    style={[
+                      styles.locationButton, 
+                      { 
+                        backgroundColor: theme.colors.background, 
+                        borderColor: theme.colors.border, 
+                        borderWidth: 1 
+                      }
+                    ]}
+                    onPress={getLocation}
+                    disabled={locationLoading}
+                  >
+                    <View style={styles.locationButtonLeft}>
+                      {locationLoading ? (
+                         <ActivityIndicator size="small" color={theme.colors.primary} />
+                      ) : (
+                         <Navigation size={18} color={theme.colors.primary} />
+                      )}
+                      <Typography 
+                        variant="bodySmall" 
+                        weight="medium" 
+                        style={{ color: locationLoading ? theme.colors.textSecondary : theme.colors.textPrimary, marginLeft: 10 }}
+                      >
+                        {locationLoading ? "Finding your location..." : (formData.locationText || "Tap to detect location")}
+                      </Typography>
+                    </View>
+                    {!locationLoading && <ArrowLeft size={14} color={theme.colors.textMuted} style={{ transform: [{ rotate: '180deg' }] }} />}
+                  </TouchableOpacity>
+                ) : (
+                  <TextInput
+                    placeholder="E.g. New York, USA"
+                    value={formData.locationText}
+                    onChangeText={(t) => setFormData({ ...formData, locationText: t })}
+                    containerStyle={styles.inputMarginReduced}
+                  />
+                )}
+
                 <View style={styles.hintRow}>
                   <Navigation size={12} color={theme.colors.textMuted} />
                   <Typography variant="caption" color="textMuted" style={styles.hintText}>
@@ -278,22 +358,43 @@ export default function CustomerRegistrationScreen() {
                 </View>
 
                 {/* Trust Badges */}
-                <View style={[styles.trustBadges, { backgroundColor: theme.colors.surfaceSecondary }]}>
-                  <View style={styles.trustBadgeItem}>
-                    <ShieldCheck size={24} color={theme.colors.primary} />
-                    <Typography variant="caption" weight="medium" style={styles.trustBadgeText}>Your data{'\n'}is secure</Typography>
+                <View style={styles.trustBadges}>
+                  <View style={[styles.trustBadgeItem, { backgroundColor: theme.colors.surfaceSecondary, borderColor: theme.colors.border }]}>
+                    <View style={[styles.trustBadgeIconWrapper, { backgroundColor: theme.colors.background }]}>
+                      <ShieldCheck size={20} color={theme.colors.primary} />
+                    </View>
+                    <Typography variant="caption" weight="medium" style={styles.trustBadgeText}>Secure{'\n'}Data</Typography>
                   </View>
-                  <View style={[styles.trustBadgeDivider, { backgroundColor: theme.colors.border }]} />
-                  <View style={styles.trustBadgeItem}>
-                    <Lock size={24} color={theme.colors.primary} />
-                    <Typography variant="caption" weight="medium" style={styles.trustBadgeText}>We respect{'\n'}your privacy</Typography>
+                  <View style={[styles.trustBadgeItem, { backgroundColor: theme.colors.surfaceSecondary, borderColor: theme.colors.border }]}>
+                    <View style={[styles.trustBadgeIconWrapper, { backgroundColor: theme.colors.background }]}>
+                      <Lock size={20} color={theme.colors.primary} />
+                    </View>
+                    <Typography variant="caption" weight="medium" style={styles.trustBadgeText}>Privacy{'\n'}First</Typography>
                   </View>
-                  <View style={[styles.trustBadgeDivider, { backgroundColor: theme.colors.border }]} />
-                  <View style={styles.trustBadgeItem}>
-                    <Star size={24} color={theme.colors.primary} />
-                    <Typography variant="caption" weight="medium" style={styles.trustBadgeText}>Better{'\n'}experience for you</Typography>
+                  <View style={[styles.trustBadgeItem, { backgroundColor: theme.colors.surfaceSecondary, borderColor: theme.colors.border }]}>
+                    <View style={[styles.trustBadgeIconWrapper, { backgroundColor: theme.colors.background }]}>
+                      <Star size={20} color={theme.colors.primary} />
+                    </View>
+                    <Typography variant="caption" weight="medium" style={styles.trustBadgeText}>Top{'\n'}Quality</Typography>
                   </View>
                 </View>
+
+                {/* Terms and Conditions Checkbox */}
+                <TouchableOpacity 
+                  style={styles.termsContainer} 
+                  onPress={() => setAcceptedTerms(!acceptedTerms)}
+                  activeOpacity={0.7}
+                >
+                  <View style={[
+                    styles.checkbox, 
+                    acceptedTerms ? { backgroundColor: theme.colors.primary, borderColor: theme.colors.primary } : { borderColor: theme.colors.border, borderWidth: 1 }
+                  ]}>
+                    {acceptedTerms && <Check size={12} color="#FFF" />}
+                  </View>
+                  <Typography variant="caption" style={styles.termsText}>
+                    I accept the <Typography variant="caption" weight="bold" style={{ color: theme.colors.primary }}>Terms & Conditions</Typography> and <Typography variant="caption" weight="bold" style={{ color: theme.colors.primary }}>Privacy Policy</Typography>.
+                  </Typography>
+                </TouchableOpacity>
 
               </View>
 
@@ -304,7 +405,7 @@ export default function CustomerRegistrationScreen() {
                   variant="primary"
                   onPress={handleSubmit}
                   loading={loading}
-                  disabled={!formData.fullName}
+                  disabled={!formData.fullName || !acceptedTerms}
                   size="large"
                   fullWidth
                 />
@@ -350,8 +451,8 @@ const styles = StyleSheet.create({
     paddingRight: 12,
   },
   titleText: {
-    fontSize: 24,
-    lineHeight: 30,
+    fontSize: 22,
+    lineHeight: 28,
   },
   subtitleText: {
     marginTop: 6,
@@ -465,19 +566,19 @@ const styles = StyleSheet.create({
   labelContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 8,
-    marginTop: 16,
+    marginBottom: 6,
+    marginTop: 12,
   },
   labelIconWrapper: {
-    width: 32,
-    height: 32,
-    borderRadius: 8,
+    width: 28,
+    height: 28,
+    borderRadius: 6,
     alignItems: 'center',
     justifyContent: 'center',
     marginRight: 10,
   },
   labelText: {
-    fontSize: 16,
+    fontSize: 14,
   },
   formFields: {
     flex: 1,
@@ -496,27 +597,42 @@ const styles = StyleSheet.create({
   },
   hintText: {
     marginLeft: 6,
+    fontSize:12
   },
   genderGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     gap: 12,
-    marginBottom: 8,
+    marginBottom: 22,
   },
   genderPill: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    borderRadius: 24,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderRadius: 16,
+  },
+  locationModeRow: {
+    flexDirection: 'row',
+    gap: 12,
+    marginBottom: 12,
+  },
+  locationModeBtn: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 10,
+    borderRadius: 12,
+    borderWidth: 1,
   },
   locationButton: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: 20,
-    paddingVertical: 16,
-    borderRadius: 24,
+    paddingHorizontal: 14,
+    paddingVertical: 14,
+    borderRadius: 16,
     marginBottom: 8,
   },
   locationButtonLeft: {
@@ -525,26 +641,53 @@ const styles = StyleSheet.create({
   },
   trustBadges: {
     flexDirection: 'row',
-    alignItems: 'center',
     justifyContent: 'space-between',
-    paddingVertical: 16,
-    paddingHorizontal: 12,
-    borderRadius: 16,
-    marginTop: 24,
-    marginBottom: 16,
+    gap: 12,
+    marginTop: 20,
+    marginBottom: 20,
   },
   trustBadgeItem: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'center',
+    paddingVertical: 16,
+    paddingHorizontal: 8,
+    borderRadius: 16,
+    borderWidth: 1,
   },
-  trustBadgeDivider: {
-    width: 1,
-    height: 30,
+  trustBadgeIconWrapper: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 8,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 4,
+    elevation: 2,
   },
   trustBadgeText: {
     textAlign: 'center',
-    marginTop: 8,
+    lineHeight: 16,
+  },
+  termsContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 8,
+    paddingRight: 16,
+  },
+  checkbox: {
+    width: 20,
+    height: 20,
+    borderRadius: 6,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: 12,
+  },
+  termsText: {
+    flex: 1,
+    lineHeight: 18,
   },
   footer: {
     marginTop: 24,

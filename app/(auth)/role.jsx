@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import * as Location from 'expo-location';
 import { View, StyleSheet, TouchableOpacity, Pressable, Image, ImageBackground, Dimensions } from 'react-native';
-import { useRouter } from 'expo-router';
+import { useRouter, useLocalSearchParams } from 'expo-router';
 import { ArrowLeft, ChevronRight, ShieldCheck, Check } from 'lucide-react-native';
 import Animated, { FadeInUp, FadeInDown, useAnimatedStyle, withSpring, useSharedValue } from 'react-native-reanimated';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -78,6 +78,7 @@ const RoleCard = ({ title, description, imageSource, isSelected, onPress, theme,
 export default function RoleSelectionScreen() {
   const [selectedRole, setSelectedRole] = useState(null);
   const router = useRouter();
+  const { phone } = useLocalSearchParams();
   const { theme } = useAppTheme();
   const insets = useSafeAreaInsets();
 
@@ -91,9 +92,9 @@ export default function RoleSelectionScreen() {
     }
 
     if (selectedRole === 'customer') {
-      router.push('/(auth)/registration');
+      router.push({ pathname: '/(auth)/registration', params: { phone } });
     } else {
-      router.push('/(auth)/provider-setup');
+      router.push({ pathname: '/(auth)/provider-setup', params: { phone } });
     }
   };
 
