@@ -110,6 +110,7 @@ export default function RoleSelectionScreen() {
             style={styles.topBackgroundImage}
             resizeMode="cover"
           />
+          <View style={[StyleSheet.absoluteFillObject, { backgroundColor: 'rgba(0, 0, 0, 0.4)' }]} />
           <SafeAreaView style={styles.safeArea} edges={['top']}>
             {/* Back Button */}
             <TouchableOpacity onPress={() => router.back()} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }} style={[styles.backButtonContainer, { marginTop: 16, marginLeft: 24 }]}>
@@ -312,6 +313,6 @@ const styles = StyleSheet.create({
   },
   button: {
     height: 56,
-    borderRadius: 16,
+    borderRadius: 12,
   },
 });

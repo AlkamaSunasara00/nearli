@@ -3,9 +3,10 @@ import { LinearGradient } from 'expo-linear-gradient';
 import * as Location from 'expo-location';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import { ArrowLeft, Camera, MapPin, User, Mail, Users, Plus, ShieldCheck, Lock, Star, EyeOff, Navigation, Check, Phone } from 'lucide-react-native';
+import { ArrowLeft, Camera, MapPin, User, Mail, Users, Plus, ShieldCheck, Lock, Star, EyeOff, Navigation, Check, Phone, CheckCircle2 } from 'lucide-react-native';
 import { useState } from 'react';
-import { Image, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, TouchableOpacity, View, ActivityIndicator } from 'react-native';
+import { Image, Platform, StyleSheet, TouchableOpacity, View, ActivityIndicator } from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { BlurView } from 'expo-blur';
 import { Button } from '../../src/components/ui/Button';
@@ -89,7 +90,7 @@ export default function CustomerRegistrationScreen() {
 
   const LabelWithIcon = ({ icon: Icon, label, required }) => (
     <View style={styles.labelContainer}>
-      <View style={[styles.labelIconWrapper, { backgroundColor: theme.colors.primarySoft || '#FFE8D6' }]}>
+      <View style={[styles.labelIconWrapper]}>
         <Icon size={16} color={theme.colors.primary} />
       </View>
       <Typography variant="bodySmall" weight="bold" style={styles.labelText}>
@@ -159,16 +160,15 @@ export default function CustomerRegistrationScreen() {
         </View>
 
         {/* Scrollable White Form Section */}
-        <KeyboardAvoidingView
-          style={styles.formSection}
-          behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-          keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
-        >
+        <View style={styles.formSection}>
           <View style={[styles.whiteContainer, { backgroundColor: theme.colors.background }]}>
-            <ScrollView 
+            <KeyboardAwareScrollView 
               contentContainerStyle={styles.scrollContent} 
               showsVerticalScrollIndicator={false}
               keyboardShouldPersistTaps="handled"
+              enableOnAndroid={true}
+              extraScrollHeight={Platform.OS === 'ios' ? 20 : 40}
+              enableAutomaticScroll={true}
             >
               
               {/* Profile Photo Upload */}
@@ -198,11 +198,12 @@ export default function CustomerRegistrationScreen() {
 
               <View style={styles.formFields}>
                 {/* Verified Phone */}
-                <LabelWithIcon icon={Phone} label="Verified Phone Number" />
+                <LabelWithIcon icon={Phone} label="Phone Number" />
                 <TextInput
                   value={formData.phone}
                   editable={false}
-                  containerStyle={[styles.inputMargin, { opacity: 0.6 }]}
+                  containerStyle={[styles.inputMargin]}
+                  rightIcon={<CheckCircle2 size={20} color={theme.colors.success || '#4CAF50'} />}
                 />
 
                 {/* Full Name */}
@@ -361,19 +362,19 @@ export default function CustomerRegistrationScreen() {
                 <View style={styles.trustBadges}>
                   <View style={[styles.trustBadgeItem, { backgroundColor: theme.colors.surfaceSecondary, borderColor: theme.colors.border }]}>
                     <View style={[styles.trustBadgeIconWrapper, { backgroundColor: theme.colors.background }]}>
-                      <ShieldCheck size={20} color={theme.colors.primary} />
+                      <ShieldCheck size={15} color={theme.colors.primary} />
                     </View>
                     <Typography variant="caption" weight="medium" style={styles.trustBadgeText}>Secure{'\n'}Data</Typography>
                   </View>
                   <View style={[styles.trustBadgeItem, { backgroundColor: theme.colors.surfaceSecondary, borderColor: theme.colors.border }]}>
                     <View style={[styles.trustBadgeIconWrapper, { backgroundColor: theme.colors.background }]}>
-                      <Lock size={20} color={theme.colors.primary} />
+                      <Lock size={15} color={theme.colors.primary} />
                     </View>
                     <Typography variant="caption" weight="medium" style={styles.trustBadgeText}>Privacy{'\n'}First</Typography>
                   </View>
                   <View style={[styles.trustBadgeItem, { backgroundColor: theme.colors.surfaceSecondary, borderColor: theme.colors.border }]}>
                     <View style={[styles.trustBadgeIconWrapper, { backgroundColor: theme.colors.background }]}>
-                      <Star size={20} color={theme.colors.primary} />
+                      <Star size={15} color={theme.colors.primary} />
                     </View>
                     <Typography variant="caption" weight="medium" style={styles.trustBadgeText}>Top{'\n'}Quality</Typography>
                   </View>
@@ -392,7 +393,7 @@ export default function CustomerRegistrationScreen() {
                     {acceptedTerms && <Check size={12} color="#FFF" />}
                   </View>
                   <Typography variant="caption" style={styles.termsText}>
-                    I accept the <Typography variant="caption" weight="bold" style={{ color: theme.colors.primary }}>Terms & Conditions</Typography> and <Typography variant="caption" weight="bold" style={{ color: theme.colors.primary }}>Privacy Policy</Typography>.
+                    I accept the <Typography variant="caption" weight="semibold" style={{ color: theme.colors.primary }}>Terms & Conditions</Typography> and <Typography variant="caption" weight="bold" style={{ color: theme.colors.primary }}>Privacy Policy</Typography>.
                   </Typography>
                 </TouchableOpacity>
 
@@ -411,9 +412,9 @@ export default function CustomerRegistrationScreen() {
                 />
               </View>
 
-            </ScrollView>
+            </KeyboardAwareScrollView>
           </View>
-        </KeyboardAvoidingView>
+        </View>
       </SafeAreaView>
     </View>
   );
@@ -567,7 +568,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 6,
-    marginTop: 12,
+    marginTop: 14,
   },
   labelIconWrapper: {
     width: 28,
@@ -649,14 +650,14 @@ const styles = StyleSheet.create({
   trustBadgeItem: {
     flex: 1,
     alignItems: 'center',
-    paddingVertical: 16,
-    paddingHorizontal: 8,
+    paddingVertical: 10,
+    paddingHorizontal: 5,
     borderRadius: 16,
     borderWidth: 1,
   },
   trustBadgeIconWrapper: {
-    width: 36,
-    height: 36,
+    width: 26,
+    height: 26,
     borderRadius: 18,
     alignItems: 'center',
     justifyContent: 'center',
@@ -669,7 +670,7 @@ const styles = StyleSheet.create({
   },
   trustBadgeText: {
     textAlign: 'center',
-    lineHeight: 16,
+    lineHeight: 14,
   },
   termsContainer: {
     flexDirection: 'row',

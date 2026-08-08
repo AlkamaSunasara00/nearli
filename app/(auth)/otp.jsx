@@ -11,6 +11,7 @@ import { Typography } from '../../src/components/ui/Typography';
 import { Button } from '../../src/components/ui/Button';
 import { IconButton } from '../../src/components/ui/IconButton';
 import { authService } from '../../src/services/api/authService';
+import { Toast } from '../../src/components/ui/Toast';
 
 // Animated OTP box component
 const OtpBox = ({ value, isFocused, hasError, onChange, onKeyPress, onFocus, inputRef, theme }) => {
@@ -53,6 +54,7 @@ export default function OtpScreen() {
   const router = useRouter();
   const { theme } = useAppTheme();
   const insets = useSafeAreaInsets();
+  const toastRef = useRef(null);
   
   const inputs = useRef([]);
 
@@ -81,15 +83,16 @@ export default function OtpScreen() {
     try {
       setLoading(true);
       await authService.verifyOTP(phone, otpToVerify);
-      // On success, navigate to the celebration screen instead of directly to role
-      router.replace({ pathname: '/(auth)/success', params: { phone } });
+      toastRef.current?.show('OTP Verified Successfully!', 'success');
+      setTimeout(() => {
+        router.replace({ pathname: '/(auth)/role', params: { phone } });
+      }, 1500);
     } catch (err) {
       if (err.message?.includes('expired')) {
         setError('Code expired. Request a new OTP.');
       } else {
         setError('Incorrect verification code.');
       }
-    } finally {
       setLoading(false);
     }
   };
@@ -234,6 +237,7 @@ export default function OtpScreen() {
           />
         </Animated.View>
       </ScrollView>
+      <Toast ref={toastRef} />
     </KeyboardAvoidingView>
     </SafeAreaView>
   );

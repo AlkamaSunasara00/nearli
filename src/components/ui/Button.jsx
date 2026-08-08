@@ -19,7 +19,7 @@ export const Button = ({
   const { theme } = useAppTheme();
 
   let height = 48;
-  let borderRadius = theme.radius.full;
+  let borderRadius = theme.radius.md;
   
   if (size === 'small') {
     height = 40;

@@ -1022,7 +1022,7 @@ const styles = StyleSheet.create({
     borderRadius: 999,
   },
   ctaButton: {
-    borderRadius: 14,
+    borderRadius: 12,
     paddingHorizontal: 22,
     marginBottom: 6,
     width: '100%',
